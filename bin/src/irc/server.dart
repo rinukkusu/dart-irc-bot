@@ -12,6 +12,13 @@ class IrcServer {
   String _realname = "Insane Bot";
   String _password;
 
+  StreamController _pongController = new StreamController();
+  StreamController _noticeController = new StreamController();
+  StreamController _messageController = new StreamController();
+  Stream<IrcMessage> pongs = _pongController.stream.asBroadcastStream();
+  Stream<IrcMessage> notices = _noticeController.stream.asBroadcastStream();
+  Stream<IrcMessage> messages = _messageController.stream.asBroadcastStream();
+
   IrcServer(String host, [int port = 6667]) {
     _host = host;
     _port = port;
@@ -56,8 +63,20 @@ class IrcServer {
 
   void _handleMessage(IrcMessage message) {
     switch (message.command) {
+
       case "PING":
         _sendRaw("PONG :${message.message}");
+        break;
+
+      case "PONG":
+        _pongController.add(message);
+
+      case "NOTICE":
+        _noticeController.add(message);
+        break;
+
+      case "PRIVMSG":
+        _messageController.add(message);
         break;
 
       default:
