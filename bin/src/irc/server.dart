@@ -1,15 +1,31 @@
 import 'dart:io';
+import 'dart:async';
+
 import 'entities/irc_message.dart';
 
 class IrcServer {
   Socket _socket;
 
-  IrcServer.connect(String host, [int port = 6667]) {
-    Socket.connect(host, port).then((socket) {
-      _socket = socket;
-      _authenticate();
-      socket.listen(onData);
-    });
+  String _host;
+  int _port;
+  String _username = "dartbot";
+  String _realname = "Insane Bot";
+  String _password;
+
+  IrcServer(String host, [int port = 6667]) {
+    _host = host;
+    _port = port;
+  }
+
+  void withUsername(String username) => _username = username;
+  void withRealname(String realname) => _realname = realname;
+  void withPassword(String password) => _password = password;
+
+  Future<Null> connect() async {
+    _socket = await Socket.connect(_host, _port);
+    _socket.listen(_onData);
+
+    _authenticate();
   }
 
   void _sendRaw(String message) {
@@ -18,15 +34,13 @@ class IrcServer {
   }
 
   void _authenticate() {
-    _sendRaw("NICK dartbot");
-    _sendRaw("USER dartbot 0 * :dartbot");
+    _sendRaw("NICK ${_username}");
+    _sendRaw("USER ${_username} 0 * :${_realname}");
   }
 
-  void onData(List<int> data) {
+  void _onData(List<int> data) {
     String messageRaw = new String.fromCharCodes(data);
-    var messages = messageRaw
-      .replaceAll("\r", "")
-      .split("\n");
+    var messages = messageRaw.replaceAll("\r", "").split("\n");
 
     messages.forEach((message) {
       if (message.trim().length != 0) {
