@@ -1,4 +1,4 @@
-import 'server.dart';
+part of irc_bot;
 
 abstract class IrcPluginBase {
   void register(IrcServer server);

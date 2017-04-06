@@ -1,4 +1,4 @@
-import 'irc_message.dart';
+part of irc_bot;
 
 class IrcCommand {
   static String commandChar = "_";

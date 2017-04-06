@@ -1,4 +1,4 @@
-import 'src/irc/server.dart';
+import 'src/irc-bot.dart';
 
 main(List<String> args) async {
   var server = new IrcServer("irc.euirc.net")

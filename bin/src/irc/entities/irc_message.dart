@@ -1,3 +1,5 @@
+part of irc_bot;
+
 class Sender {
   static RegExp _senderRegex = new RegExp(r"^(?:(.+)!(.+)@)?(.+)$");
 

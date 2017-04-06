@@ -1,10 +1,4 @@
-import '../plugins/echo.dart';
-import 'dart:io';
-import 'dart:async';
-
-import 'entities/irc_command.dart';
-import 'entities/irc_message.dart';
-import 'plugin_base.dart';
+part of irc_bot;
 
 class IrcServer {
   Socket _socket;
@@ -33,9 +27,10 @@ class IrcServer {
     messages = _messageController.stream.asBroadcastStream();
     commands = _commandController.stream.asBroadcastStream();
 
+    _registerCorePlugins();
+
     _host = host;
     _port = port;
-    registerPlugin(new EchoPlugin());
   }
 
   String withUsername(String username) => _username = username;
@@ -53,6 +48,23 @@ class IrcServer {
     });
 
     _authenticate();
+  }
+
+  void _registerCorePlugins() {
+    var mirror = currentMirrorSystem()
+        .libraries
+        .values
+        .firstWhere((x) => x.simpleName == new Symbol("irc_bot"));
+
+    mirror.declarations.values.forEach((declaration) {
+      var classMirror = declaration as ClassMirror;
+      if (classMirror.superinterfaces.any(
+          (interface) => interface.simpleName == new Symbol("IrcPluginBase"))) {
+        print("Registering ${MirrorSystem.getName(declaration.simpleName)} ...");
+        var instance = classMirror.newInstance(new Symbol(""), []);
+        instance.invoke(new Symbol("register"), [this]);
+      }
+    });
   }
 
   void registerPlugin(IrcPluginBase plugin) {

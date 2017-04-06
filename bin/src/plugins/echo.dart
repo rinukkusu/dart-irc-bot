@@ -1,6 +1,4 @@
-import '../irc/entities/irc_command.dart';
-import '../irc/plugin_base.dart';
-import '../irc/server.dart';
+part of irc_bot;
 
 class EchoPlugin implements IrcPluginBase {
   IrcServer _server;
@@ -13,6 +11,7 @@ class EchoPlugin implements IrcPluginBase {
 
   void onCommand(IrcCommand message) {
     if (message.command == "echo")
-      _server.sendMessage(message.originalMessage.returnTo, message.rawArgumentString);
+      _server.sendMessage(
+          message.originalMessage.returnTo, message.rawArgumentString);
   }
 }
