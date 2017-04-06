@@ -10,18 +10,22 @@ class IrcServer {
   String _password;
   String _commandChar = "_";
 
+  StreamController<IrcMessage> _rawController = new StreamController();
   StreamController<IrcMessage> _pongController = new StreamController();
   StreamController<IrcMessage> _noticeController = new StreamController();
   StreamController<IrcMessage> _messageController = new StreamController();
   StreamController<IrcCommand> _commandController = new StreamController();
+  Stream<IrcMessage> rawMessages;
   Stream<IrcMessage> pongs;
   Stream<IrcMessage> notices;
   Stream<IrcMessage> messages;
   Stream<IrcCommand> commands;
 
   List<IrcPluginBase> _plugins = new List<IrcPluginBase>();
+  List<String> _channels = new List<String>();
 
   IrcServer(String host, [int port = 6667]) {
+    rawMessages = _rawController.stream.asBroadcastStream();
     pongs = _pongController.stream.asBroadcastStream();
     notices = _noticeController.stream.asBroadcastStream();
     messages = _messageController.stream.asBroadcastStream();
@@ -48,6 +52,24 @@ class IrcServer {
     });
 
     _authenticate();
+    _joinChannels();
+  }
+
+  void _joinChannels() {
+    rawMessages.firstWhere((message) {
+      if (message.type == MessageType.RPL_WELCOME) {
+        _channels.forEach((channel) {
+          if (!channel.startsWith("#")) channel = "#${channel}";
+          _sendRaw("JOIN ${channel}");
+        });
+
+        return true;
+      }
+    });
+  }
+
+  void addChannel(String channel) {
+    _channels.add(channel);
   }
 
   void _registerCorePlugins() {
@@ -108,20 +130,22 @@ class IrcServer {
   }
 
   void _handleMessage(IrcMessage message) {
+    _rawController.add(message);
+
     switch (message.type) {
-      case "PING":
+      case MessageType.PING:
         _sendRaw("PONG :${message.message}");
         break;
 
-      case "PONG":
+      case MessageType.PONG:
         _pongController.add(message);
         break;
-        
-      case "NOTICE":
+
+      case MessageType.NOTICE:
         _noticeController.add(message);
         break;
 
-      case "PRIVMSG":
+      case MessageType.PRIVMSG:
         _messageController.add(message);
         if (_isCommand(message))
           _commandController.add(new IrcCommand.fromIrcMessage(message));
