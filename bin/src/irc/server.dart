@@ -47,6 +47,11 @@ class IrcServer {
     _socket = await Socket.connect(_host, _port);
     _socket.listen(_onData);
 
+    stdin.listen((data) {
+      String input = new String.fromCharCodes(data);
+      _sendRaw(input);
+    });
+
     _authenticate();
   }
 
