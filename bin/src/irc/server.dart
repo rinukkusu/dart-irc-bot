@@ -60,7 +60,8 @@ class IrcServer {
       var classMirror = declaration as ClassMirror;
       if (classMirror.superinterfaces.any(
           (interface) => interface.simpleName == new Symbol("IrcPluginBase"))) {
-        print("Registering ${MirrorSystem.getName(declaration.simpleName)} ...");
+        print(
+            "Registering ${MirrorSystem.getName(declaration.simpleName)} ...");
         var instance = classMirror.newInstance(new Symbol(""), []);
         instance.invoke(new Symbol("register"), [this]);
       }
@@ -114,7 +115,8 @@ class IrcServer {
 
       case "PONG":
         _pongController.add(message);
-
+        break;
+        
       case "NOTICE":
         _noticeController.add(message);
         break;
