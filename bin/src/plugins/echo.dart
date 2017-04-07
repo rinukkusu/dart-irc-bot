@@ -1,12 +1,8 @@
 part of irc_bot;
 
-class EchoPlugin implements IrcPluginBase {
-  IrcConnection _server;
-
+class EchoPlugin extends IrcPluginBase {
   @override
-  void register(IrcConnection server) {
-    _server = server;
-  }
+  void register() {}
 
   @Command("echo")
   void onEcho(IrcCommand message) {

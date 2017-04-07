@@ -1,12 +1,10 @@
 part of irc_bot;
 
-class PingPlugin implements IrcPluginBase {
-  IrcConnection _server;
+class PingPlugin extends IrcPluginBase {
   Map<int, IrcMessage> _pingMap = new Map<int, IrcMessage>();
 
   @override
-  void register(IrcConnection server) {
-    _server = server;
+  void register() {
     _server.pongs.listen(onPong);
   }
 

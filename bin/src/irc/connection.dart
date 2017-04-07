@@ -90,8 +90,7 @@ class IrcConnection {
 
     mirror.declarations.values.forEach((declaration) {
       var classMirror = declaration as ClassMirror;
-      if (classMirror.superinterfaces.any(
-          (interface) => interface.simpleName == new Symbol("IrcPluginBase"))) {
+      if (classMirror.superclass.simpleName == new Symbol("IrcPluginBase")) {
         var pluginName = MirrorSystem.getName(declaration.simpleName);
         var instance = classMirror.newInstance(new Symbol(""), []);
         registerPlugin(pluginName, instance.reflectee);
@@ -102,7 +101,7 @@ class IrcConnection {
   void registerPlugin(String name, IrcPluginBase plugin) {
     print("Registering ${name} ...");
     _plugins.putIfAbsent(name, () => plugin);
-    plugin.register(this);
+    plugin._registerPlugin(this);
 
     // register commands
     var pluginReflection = reflect(plugin);

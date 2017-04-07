@@ -1,11 +1,8 @@
 part of irc_bot;
 
-class CorePlugin implements IrcPluginBase {
-  IrcConnection _server;
-
+class CorePlugin extends IrcPluginBase {
   @override
-  void register(IrcConnection server) {
-    _server = server;
+  void register() {
     _server.commands.listen(handleCommand);
   }
 

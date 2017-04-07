@@ -1,11 +1,8 @@
 part of irc_bot;
 
-class InvitePlugin implements IrcPluginBase {
-  IrcConnection _server;
-
+class InvitePlugin extends IrcPluginBase {
   @override
-  void register(IrcConnection server) {
-    _server = server;
+  void register() {
     _server.invites.listen(onInvite);
   }
 
