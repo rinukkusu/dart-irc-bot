@@ -1,16 +1,15 @@
 part of irc_bot;
 
 class EchoPlugin implements IrcPluginBase {
-  IrcServer _server;
+  IrcConnection _server;
 
   @override
-  void register(IrcServer server) {
+  void register(IrcConnection server) {
     _server = server;
-    _server.commands.listen(onCommand);
+    _server.addCommand("echo", onEcho);
   }
 
-  void onCommand(IrcCommand message) {
-    if (message.command == "echo")
+  void onEcho(IrcCommand message) {
       _server.sendMessage(
           message.originalMessage.returnTo, message.rawArgumentString);
   }

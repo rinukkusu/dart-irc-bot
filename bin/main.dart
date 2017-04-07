@@ -1,7 +1,7 @@
 import 'src/irc_bot.dart';
 
 main(List<String> args) async {
-  var server = new IrcServer("irc.euirc.net")
+  var server = new IrcConnection("irc.euirc.net")
     ..withUsername("rinubot")
     ..withRealname("hallo i bims")
     ..addChannel("#/prog/bot");

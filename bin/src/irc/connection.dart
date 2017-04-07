@@ -1,6 +1,6 @@
 part of irc_bot;
 
-class IrcServer {
+class IrcConnection {
   Socket _socket;
 
   String _host;
@@ -21,15 +21,19 @@ class IrcServer {
   Stream<IrcMessage> messages;
   Stream<IrcCommand> commands;
 
-  List<IrcPluginBase> _plugins = new List<IrcPluginBase>();
+  Map<String, IrcPluginBase> _plugins = new Map<String, IrcPluginBase>();
+  Map<String, Function> _commands = new Map<String, Function>();
   List<String> _channels = new List<String>();
+  CommandDispatcher _dispatcher;
 
-  IrcServer(String host, [int port = 6667]) {
+  IrcConnection(String host, [int port = 6667]) {
     rawMessages = _rawController.stream.asBroadcastStream();
     pongs = _pongController.stream.asBroadcastStream();
     notices = _noticeController.stream.asBroadcastStream();
     messages = _messageController.stream.asBroadcastStream();
     commands = _commandController.stream.asBroadcastStream();
+
+    _dispatcher = new CommandDispatcher(this);
 
     _registerCorePlugins();
 
@@ -72,6 +76,10 @@ class IrcServer {
     _channels.add(channel);
   }
 
+  void addCommand(String command, Function function) {
+    _commands.putIfAbsent(command, () => function);
+  }
+
   void _registerCorePlugins() {
     var mirror = currentMirrorSystem()
         .libraries
@@ -90,8 +98,8 @@ class IrcServer {
     });
   }
 
-  void registerPlugin(IrcPluginBase plugin) {
-    _plugins.add(plugin);
+  void registerPlugin(String name, IrcPluginBase plugin) {
+    _plugins.putIfAbsent(name, () => plugin);
     plugin.register(this);
   }
 
