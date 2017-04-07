@@ -7,6 +7,7 @@ import 'dart:mirrors';
 part 'irc/enums/message_type.dart';
 part 'irc/entities/irc_command.dart';
 part 'irc/entities/irc_message.dart';
+part 'irc/annotations/command.dart';
 part 'irc/connection.dart';
 part 'irc/plugin_base.dart';
 

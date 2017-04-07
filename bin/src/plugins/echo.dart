@@ -6,9 +6,9 @@ class EchoPlugin implements IrcPluginBase {
   @override
   void register(IrcConnection server) {
     _server = server;
-    _server.addCommand("echo", onEcho);
   }
 
+  @Command("echo")
   void onEcho(IrcCommand message) {
     _server.sendMessage(
         message.originalMessage.returnTo, message.rawArgumentString);

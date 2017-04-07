@@ -92,17 +92,30 @@ class IrcConnection {
       var classMirror = declaration as ClassMirror;
       if (classMirror.superinterfaces.any(
           (interface) => interface.simpleName == new Symbol("IrcPluginBase"))) {
-        print(
-            "Registering ${MirrorSystem.getName(declaration.simpleName)} ...");
+        var pluginName = MirrorSystem.getName(declaration.simpleName);
         var instance = classMirror.newInstance(new Symbol(""), []);
-        instance.invoke(new Symbol("register"), [this]);
+        registerPlugin(pluginName, instance.reflectee);
       }
     });
   }
 
   void registerPlugin(String name, IrcPluginBase plugin) {
+    print("Registering ${name} ...");
     _plugins.putIfAbsent(name, () => plugin);
     plugin.register(this);
+
+    // register commands
+    var pluginReflection = reflect(plugin);
+    pluginReflection.type.instanceMembers.forEach((symbol, methodMirror) {
+      if (methodMirror.metadata
+          .any((meta) => meta.type.simpleName == new Symbol("Command"))) {
+        var commandName = (methodMirror.metadata.first.reflectee as Command).name;
+        addCommand(
+            commandName,
+            (command) => pluginReflection
+                .invoke(methodMirror.simpleName, [command]));
+      }
+    });
   }
 
   void _sendRaw(String message) {

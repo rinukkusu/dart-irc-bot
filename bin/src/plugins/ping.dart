@@ -7,10 +7,10 @@ class PingPlugin implements IrcPluginBase {
   @override
   void register(IrcConnection server) {
     _server = server;
-    _server.addCommand("ping", onPing);
     _server.pongs.listen(onPong);
   }
 
+  @Command("ping")
   void onPing(IrcCommand message) {
     var timestamp = new DateTime.now().microsecondsSinceEpoch;
     _pingMap.putIfAbsent(timestamp, () => message.originalMessage);
