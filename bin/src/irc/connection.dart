@@ -26,7 +26,6 @@ class IrcConnection {
   Map<String, IrcPluginBase> _plugins = new Map<String, IrcPluginBase>();
   Map<String, Function> _commands = new Map<String, Function>();
   List<String> _channels = new List<String>();
-  CommandDispatcher _dispatcher;
 
   IrcConnection(String host, [int port = 6667]) {
     rawMessages = _rawController.stream.asBroadcastStream();
@@ -35,8 +34,6 @@ class IrcConnection {
     messages = _messageController.stream.asBroadcastStream();
     commands = _commandController.stream.asBroadcastStream();
     invites = _inviteController.stream.asBroadcastStream();
-
-    _dispatcher = new CommandDispatcher(this);
 
     _registerCorePlugins();
 

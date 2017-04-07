@@ -9,7 +9,6 @@ part 'irc/entities/irc_command.dart';
 part 'irc/entities/irc_message.dart';
 part 'irc/connection.dart';
 part 'irc/plugin_base.dart';
-part 'irc/command_dispatcher.dart';
 
 part 'plugins/core.dart';
 part 'plugins/echo.dart';

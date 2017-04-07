@@ -8,6 +8,7 @@ class CorePlugin implements IrcPluginBase {
     _server = server;
     _server.addCommand("help", onHelp);
     _server.addCommand("commands", onCommands);
+    _server.commands.listen(handleCommand);
   }
 
   void onHelp(IrcCommand command) {
@@ -19,5 +20,12 @@ class CorePlugin implements IrcPluginBase {
 
     _server.sendMessage(command.originalMessage.returnTo,
         "${command.originalMessage.sender.username}: ${commands}");
+  }
+
+  void handleCommand(IrcCommand command) {
+    if (_server._commands.containsKey(command.command)) {
+      var handler = _server._commands[command.command];
+      handler(command);
+    }
   }
 }
