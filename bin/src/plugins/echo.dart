@@ -10,7 +10,7 @@ class EchoPlugin implements IrcPluginBase {
   }
 
   void onEcho(IrcCommand message) {
-      _server.sendMessage(
-          message.originalMessage.returnTo, message.rawArgumentString);
+    _server.sendMessage(
+        message.originalMessage.returnTo, message.rawArgumentString);
   }
 }

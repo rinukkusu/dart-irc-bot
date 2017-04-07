@@ -15,11 +15,13 @@ class IrcConnection {
   StreamController<IrcMessage> _noticeController = new StreamController();
   StreamController<IrcMessage> _messageController = new StreamController();
   StreamController<IrcCommand> _commandController = new StreamController();
+  StreamController<IrcMessage> _inviteController = new StreamController();
   Stream<IrcMessage> rawMessages;
   Stream<IrcMessage> pongs;
   Stream<IrcMessage> notices;
   Stream<IrcMessage> messages;
   Stream<IrcCommand> commands;
+  Stream<IrcMessage> invites;
 
   Map<String, IrcPluginBase> _plugins = new Map<String, IrcPluginBase>();
   Map<String, Function> _commands = new Map<String, Function>();
@@ -32,6 +34,7 @@ class IrcConnection {
     notices = _noticeController.stream.asBroadcastStream();
     messages = _messageController.stream.asBroadcastStream();
     commands = _commandController.stream.asBroadcastStream();
+    invites = _inviteController.stream.asBroadcastStream();
 
     _dispatcher = new CommandDispatcher(this);
 
@@ -62,14 +65,16 @@ class IrcConnection {
   void _joinChannels() {
     rawMessages.firstWhere((message) {
       if (message.type == MessageType.RPL_WELCOME) {
-        _channels.forEach((channel) {
-          if (!channel.startsWith("#")) channel = "#${channel}";
-          _sendRaw("JOIN ${channel}");
-        });
+        _channels.forEach(_joinChannel);
 
         return true;
       }
     });
+  }
+
+  void _joinChannel(String channel) {
+    if (!channel.startsWith("#")) channel = "#${channel}";
+    _sendRaw("JOIN ${channel}");
   }
 
   void addChannel(String channel) {
@@ -157,6 +162,10 @@ class IrcConnection {
         _messageController.add(message);
         if (_isCommand(message))
           _commandController.add(new IrcCommand.fromIrcMessage(message));
+        break;
+
+      case MessageType.INVITE:
+        _inviteController.add(message);
         break;
 
       default:

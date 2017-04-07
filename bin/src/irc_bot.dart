@@ -11,5 +11,7 @@ part 'irc/connection.dart';
 part 'irc/plugin_base.dart';
 part 'irc/command_dispatcher.dart';
 
+part 'plugins/core.dart';
 part 'plugins/echo.dart';
 part 'plugins/ping.dart';
+part 'plugins/invite.dart';
