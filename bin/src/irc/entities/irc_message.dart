@@ -22,6 +22,8 @@ class IrcMessage {
       target = match.group(3);
       message = match.group(4);
 
+      message ??= "";
+
       if (target != null) {
         if (target.startsWith("#")) {
           returnTo = target;
@@ -29,7 +31,7 @@ class IrcMessage {
           returnTo = sender.username;
         }
       }
-      
+
     }
   }
 }
