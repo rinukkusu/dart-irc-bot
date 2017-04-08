@@ -109,11 +109,13 @@ class IrcConnection {
         .firstWhere((x) => x.simpleName == new Symbol("irc_bot"));
 
     mirror.declarations.values.forEach((declaration) {
-      var classMirror = declaration as ClassMirror;
-      if (classMirror.superclass.simpleName == new Symbol("IrcPluginBase")) {
-        var pluginName = MirrorSystem.getName(declaration.simpleName);
-        var instance = classMirror.newInstance(new Symbol(""), []);
-        registerPlugin(pluginName, instance.reflectee);
+      if (declaration is ClassMirror) {
+        var classMirror = declaration as ClassMirror;
+        if (classMirror.superclass.simpleName == new Symbol("IrcPluginBase")) {
+          var pluginName = MirrorSystem.getName(declaration.simpleName);
+          var instance = classMirror.newInstance(new Symbol(""), []);
+          registerPlugin(pluginName, instance.reflectee);
+        }
       }
     });
   }
