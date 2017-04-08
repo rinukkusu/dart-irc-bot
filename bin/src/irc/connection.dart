@@ -23,8 +23,10 @@ class IrcConnection {
   Stream<IrcCommand> commands;
   Stream<IrcMessage> invites;
 
+  UserContainer _userContainer = new UserContainer();
+
   Map<String, IrcPluginBase> _plugins = new Map<String, IrcPluginBase>();
-  Map<String, Function> _commands = new Map<String, Function>();
+  Map<Command, Function> _commands = new Map<Command, Function>();
   List<String> _channels = new List<String>();
 
   IrcConnection(String host, [int port = 6667]) {
@@ -66,6 +68,7 @@ class IrcConnection {
 
         return true;
       }
+      return false;
     });
   }
 
@@ -74,12 +77,29 @@ class IrcConnection {
     _sendRaw("JOIN ${channel}");
   }
 
+  void _partChannel(String channel) {
+    if (!channel.startsWith("#")) channel = "#${channel}";
+    _sendRaw("PART ${channel}");
+  }
+
   void addChannel(String channel) {
     _channels.add(channel);
   }
 
-  void addCommand(String command, Function function) {
+  void addCommand(Command command, Function function) {
     _commands.putIfAbsent(command, () => function);
+  }
+
+  void addOwner(String name) {
+    _userContainer.addUser(name, UserLevel.OWNER);
+  }
+
+  void ignoreUser(String name) {
+    _userContainer.addUser(name, UserLevel.IGNORED);
+  }
+
+  void resetUser(String name) {
+    _userContainer.removeUser(name);
   }
 
   void _registerCorePlugins() {
@@ -108,9 +128,8 @@ class IrcConnection {
     pluginReflection.type.instanceMembers.forEach((symbol, methodMirror) {
       if (methodMirror.metadata
           .any((meta) => meta.type.simpleName == new Symbol("Command"))) {
-        var commandName = (methodMirror.metadata.first.reflectee as Command).name;
         addCommand(
-            commandName,
+            methodMirror.metadata.first.reflectee,
             (command) => pluginReflection
                 .invoke(methodMirror.simpleName, [command]));
       }
@@ -124,6 +143,10 @@ class IrcConnection {
 
   void sendMessage(String target, String message) {
     _sendRaw("PRIVMSG ${target} :${message}");
+  }
+
+  void sendNotice(String target, String message) {
+    _sendRaw("NOTICE ${target} :${message}");
   }
 
   void _authenticate() {
@@ -169,8 +192,10 @@ class IrcConnection {
 
       case MessageType.PRIVMSG:
         _messageController.add(message);
-        if (_isCommand(message))
+        if (_isCommand(message)) {
+          message.sender.userLevel = _userContainer.getLevel(message.sender.username);
           _commandController.add(new IrcCommand.fromIrcMessage(message));
+        }
         break;
 
       case MessageType.INVITE:

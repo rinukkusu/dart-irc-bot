@@ -1,26 +1,5 @@
 part of irc_bot;
 
-class Sender {
-  static RegExp _senderRegex = new RegExp(r"^(?:(.+)!(.+)@)?(.+)$");
-
-  String username;
-  String ident;
-  String host;
-
-  String rawSender;
-
-  Sender.fromRaw(String sender) {
-    rawSender = sender;
-    if (sender != null && sender.trim().isNotEmpty) {
-      var match = _senderRegex.firstMatch(sender);
-
-      username = match.group(1);
-      ident = match.group(2);
-      host = match.group(3);
-    }
-  }
-}
-
 class IrcMessage {
   static RegExp _messageRegex =
       new RegExp(r"^(?:[:](\S+) )?(\S+)(?: (?!:)(.+?))?(?: [:](.+))?$");
@@ -50,6 +29,7 @@ class IrcMessage {
           returnTo = sender.username;
         }
       }
+      
     }
   }
 }
