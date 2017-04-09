@@ -3,6 +3,9 @@ library irc_bot;
 import 'dart:io';
 import 'dart:async';
 import 'dart:mirrors';
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 
 part 'irc/enums/message_type.dart';
 part 'irc/enums/user_level.dart';
@@ -22,3 +25,4 @@ part 'plugins/core.dart';
 part 'plugins/echo.dart';
 part 'plugins/ping.dart';
 part 'plugins/invite.dart';
+part 'plugins/weather.dart';

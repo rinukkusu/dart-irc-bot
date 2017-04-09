@@ -6,7 +6,9 @@ class InvitePlugin extends IrcPluginBase {
     _server.invites.listen(onInvite);
   }
 
-  void onInvite(IrcMessage message) {
+  bool onInvite(IrcMessage message) {
     _server._joinChannel(message.message);
+
+    return true;
   }
 }

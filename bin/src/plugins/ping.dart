@@ -11,7 +11,7 @@ class PingPlugin extends IrcPluginBase {
   }
 
   @Command("ping")
-  void onPing(IrcCommand message) {
+  bool onPing(IrcCommand message) {
     var now = new DateTime.now();
     var diff = now.difference(_lastPing);
 
@@ -26,6 +26,8 @@ class PingPlugin extends IrcPluginBase {
       var secondsUntil = PING_TIMEOUT - diff.inSeconds;
       _server.sendNotice(message.originalMessage.sender.username, _T(Messages.PING_NOT_ALLOWED, [secondsUntil]));
     }
+
+    return true;
   }
 
   void onPong(IrcMessage message) {

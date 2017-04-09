@@ -110,10 +110,9 @@ class IrcConnection {
 
     mirror.declarations.values.forEach((declaration) {
       if (declaration is ClassMirror) {
-        var classMirror = declaration as ClassMirror;
-        if (classMirror.superclass.simpleName == new Symbol("IrcPluginBase")) {
+        if (declaration.superclass.simpleName == new Symbol("IrcPluginBase")) {
           var pluginName = MirrorSystem.getName(declaration.simpleName);
-          var instance = classMirror.newInstance(new Symbol(""), []);
+          var instance = declaration.newInstance(new Symbol(""), []);
           registerPlugin(pluginName, instance.reflectee);
         }
       }
@@ -139,7 +138,7 @@ class IrcConnection {
   }
 
   void _sendRaw(String message) {
-    _socket.add("${message}\r\n".codeUnits);
+    _socket.add(UTF8.encode("${message}\r\n"));
     print("<< ${message}");
   }
 
@@ -157,7 +156,7 @@ class IrcConnection {
   }
 
   void _onData(List<int> data) {
-    String messageRaw = new String.fromCharCodes(data);
+    String messageRaw = UTF8.decode(data);
     var messages = messageRaw.replaceAll("\r", "").split("\n");
 
     messages.forEach((message) {
