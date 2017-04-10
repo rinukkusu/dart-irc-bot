@@ -7,9 +7,9 @@ class CorePlugin extends IrcPluginBase {
   }
 
   void handleCommand(IrcCommand command) {
-    if (_server._commands.keys.any((x) => x.name == command.command)) {
+    if (_server._commands.keys.any((x) => x.name == command.command || x.alias.contains(command.command))) {
       var commandMeta =
-          _server._commands.keys.firstWhere((x) => x.name == command.command);
+          _server._commands.keys.firstWhere((x) => x.name == command.command || x.alias.contains(command.command));
 
       if (command.originalMessage.sender.userLevel < commandMeta.minUserLevel) {
         _server.sendNotice(command.originalMessage.sender.username,
@@ -17,12 +17,18 @@ class CorePlugin extends IrcPluginBase {
         return;
       }
 
-      if (command.arguments.length != commandMeta.arguments.length) {
+      int minLength = commandMeta.arguments.where((x) => !x.startsWith("?")).length;
+      int maxLength = commandMeta.arguments.length;
+
+      if (command.arguments.length < minLength || command.arguments.length > maxLength) {
         var argumentString = "";
-        commandMeta.arguments.forEach((arg) => argumentString += "<${arg}> ");
+        commandMeta.arguments.forEach((arg) {
+          argumentString += arg.startsWith("?") ? "[${arg.substring(1)}] " : "<${arg}> ";
+        });
         _server.sendNotice(
             command.originalMessage.sender.username,
-            _T(Messages.COMMAND_WRONG_USAGE, [commandMeta.name, argumentString]));
+            _T(Messages.COMMAND_WRONG_USAGE,
+                [commandMeta.name, argumentString]));
         return;
       }
 

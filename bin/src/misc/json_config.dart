@@ -24,7 +24,8 @@ class JsonConfig {
     return _this;
   }
 
-  static Future<Null> _ensurePath(String fileName, [bool callSave = false, JsonConfig _this = null]) async {
+  static Future<Null> _ensurePath(String fileName,
+      [bool callSave = false, JsonConfig _this = null]) async {
     var dir = new Directory(CONFIG_PATH);
     if (!(await dir.exists())) {
       await dir.create();
@@ -37,21 +38,24 @@ class JsonConfig {
   }
 
   dynamic get(String key, [dynamic ifAbsent = null]) {
-    if (_config.containsKey(key))
-      return _config[key];
+    if (_config.containsKey(key)) return _config[key];
 
     _config.putIfAbsent(key, () => ifAbsent);
     return ifAbsent;
   }
 
   void set(String key, dynamic value) {
-    _config.putIfAbsent(key, () => value);
+    if (_config.containsKey(key))
+      _config[key] = value;
+    else
+      _config.putIfAbsent(key, () => value);
   }
 
   Future<Null> save([String fileName = null]) async {
     fileName ??= _fileName;
     await _ensurePath(fileName);
-    var contents = JSON.encode(_config);
+    JsonEncoder encoder = new JsonEncoder.withIndent('  ');
+    var contents = encoder.convert(_config);
     await new File(_getPath(fileName)).writeAsString(contents, flush: true);
   }
 }

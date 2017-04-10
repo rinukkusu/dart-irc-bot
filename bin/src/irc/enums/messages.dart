@@ -7,7 +7,12 @@ class Messages {
   static const String PING_NOT_ALLOWED =
       "I'm not allowed to send PINGs for like {1} seconds.";
 
-  static const String EDIT_CONFIG_ERROR = "Please edit the config file at {1}.";
+  static const String EDIT_CONFIG_ERROR = "Please edit the config file at '{1}'.";
+
+  static const String WEATHER_LOCATION_SET =
+      "Your location has been updated to '{1}'.";
+  static const String WEATHER_LOCATION_MISSING =
+      "You need to set your location to use this command without parameters.";
 }
 
 String _T(String template, [List<dynamic> params = null]) {
