@@ -117,4 +117,15 @@ class CorePlugin extends IrcPluginBase {
 
     return true;
   }
+
+  @Command("quit", const ["?message"], UserLevel.OWNER)
+  bool onQuit(IrcCommand command) {
+    var message =
+        command.arguments.isNotEmpty ? command.arguments.first : "Bye.";
+    _server._sendRaw("QUIT :${message}");
+
+    exit(0);
+
+    return true;
+  }
 }
