@@ -7,9 +7,10 @@ class CorePlugin extends IrcPluginBase {
   }
 
   void handleCommand(IrcCommand command) {
-    if (_server._commands.keys.any((x) => x.name == command.command || x.alias.contains(command.command))) {
-      var commandMeta =
-          _server._commands.keys.firstWhere((x) => x.name == command.command || x.alias.contains(command.command));
+    if (_server._commands.keys.any((x) =>
+        x.name == command.command || x.alias.contains(command.command))) {
+      var commandMeta = _server._commands.keys.firstWhere((x) =>
+          x.name == command.command || x.alias.contains(command.command));
 
       if (command.originalMessage.sender.userLevel < commandMeta.minUserLevel) {
         _server.sendNotice(command.originalMessage.sender.username,
@@ -17,13 +18,16 @@ class CorePlugin extends IrcPluginBase {
         return;
       }
 
-      int minLength = commandMeta.arguments.where((x) => !x.startsWith("?")).length;
+      int minLength =
+          commandMeta.arguments.where((x) => !x.startsWith("?")).length;
       int maxLength = commandMeta.arguments.length;
 
-      if (command.arguments.length < minLength || command.arguments.length > maxLength) {
+      if (command.arguments.length < minLength ||
+          command.arguments.length > maxLength) {
         var argumentString = "";
         commandMeta.arguments.forEach((arg) {
-          argumentString += arg.startsWith("?") ? "[${arg.substring(1)}] " : "<${arg}> ";
+          argumentString +=
+              arg.startsWith("?") ? "[${arg.substring(1)}] " : "<${arg}> ";
         });
         _server.sendNotice(
             command.originalMessage.sender.username,
@@ -45,8 +49,16 @@ class CorePlugin extends IrcPluginBase {
       ..removeWhere(
           (x) => command.originalMessage.sender.userLevel < x.minUserLevel);
 
+    var filteredCommands = commands.map((x) {
+      var c = "${x.name}";
+      if (x.alias.isNotEmpty) {
+        c += "|" + x.alias.join("|");
+      }
+      return c;
+    });
+
     _server.sendMessage(command.originalMessage.returnTo,
-        "${command.originalMessage.sender.username}: ${commands.map((x) => x.name).toList()}");
+        "${command.originalMessage.sender.username}: ${filteredCommands.toList()}");
 
     return true;
   }
