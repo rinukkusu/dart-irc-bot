@@ -21,6 +21,8 @@ part 'irc/connection.dart';
 part 'irc/plugin_base.dart';
 part 'irc/user_container.dart';
 
+part 'misc/json_config.dart';
+
 part 'plugins/core.dart';
 part 'plugins/echo.dart';
 part 'plugins/ping.dart';

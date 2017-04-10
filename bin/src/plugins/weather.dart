@@ -3,8 +3,8 @@ part of irc_bot;
 class WeatherPlugin extends IrcPluginBase {
   static const String API_URL = "http://api.openweathermap.org/data/2.5/weather?units=metric";
   static const String RETURN_STRING = "%CITY% | %TEMP%°C | %WEATHERINFO% | H: %HUMIDITY%%, P: %PRESSURE%hPa";
-  String ApiToken = ""; // TODO: put into seperate config
-  String _getApiUrl(String place) => "${API_URL}&APPID=${ApiToken}&q=${place}";
+  String _apiToken = "";
+  String _getApiUrl(String place) => "${API_URL}&APPID=${_apiToken}&q=${place}";
 
   Map<String, String> _weatherIcons = {
      "01d": "☀", "01n": "🌚",
@@ -18,8 +18,19 @@ class WeatherPlugin extends IrcPluginBase {
      "50d": "🌫", "50n": "🌫"
   };
 
+  JsonConfig _config;
+
   @override
-  void register() {}
+  Future<Null> register() async {
+    _config = await JsonConfig.fromPath("weather.json");
+    _apiToken = _config.get("ApiToken", "");
+    if (_apiToken.isEmpty) {
+      _config.set("ApiToken", "");
+      await _config.save();
+
+      throw new Exception(_T(Messages.EDIT_CONFIG_ERROR, [_config.getPath()]));
+    }
+  }
 
   @Command("weather")
   bool onWeather(IrcCommand command) {

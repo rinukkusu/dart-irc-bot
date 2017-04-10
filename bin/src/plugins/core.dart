@@ -12,7 +12,8 @@ class CorePlugin extends IrcPluginBase {
 
       if (command.originalMessage.sender.userLevel >= commandMeta.minUserLevel) {
         var handler = _server._commands[commandMeta];
-        handler(command);
+        bool result = (handler(command) as InstanceMirror).reflectee;
+        print(result);
       }
       else {
         _server.sendNotice(command.originalMessage.sender.username, Messages.COMMAND_NO_PERMISSION);
