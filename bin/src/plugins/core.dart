@@ -87,6 +87,9 @@ class CorePlugin extends IrcPluginBase {
   @Command("ignore", const ["user", "?duration"], UserLevel.OWNER)
   bool onIgnore(IrcCommand command) {
     var user = command.arguments.first;
+    if (_server._userContainer.getActualLevel(user) == UserLevel.OWNER)
+      return false;
+
     var duration = parseDuration(command.arguments.last);
 
     _server.ignoreUser(user);

@@ -7,5 +7,7 @@ class Command {
   final List<String> alias;
 
   const Command(this.name,
-      [this.arguments = const [], this.minUserLevel = UserLevel.DEFAULT, this.alias = const []]);
+      [this.arguments = const [],
+      this.minUserLevel = UserLevel.DEFAULT,
+      this.alias = const []]);
 }

@@ -99,7 +99,7 @@ class IrcConnection {
   }
 
   void resetUser(String name) {
-    _userContainer.removeUser(name);
+    _userContainer.addUser(name, UserLevel.DEFAULT);
   }
 
   void _registerCorePlugins() {
@@ -131,8 +131,8 @@ class IrcConnection {
           .any((meta) => meta.type.simpleName == new Symbol("Command"))) {
         addCommand(
             methodMirror.metadata.first.reflectee as Command,
-            (IrcCommand command) => pluginReflection
-                .invoke(methodMirror.simpleName, [command]));
+            (IrcCommand command) =>
+                pluginReflection.invoke(methodMirror.simpleName, [command]));
       }
     });
   }
@@ -165,6 +165,8 @@ class IrcConnection {
 
         var ircMessage = new IrcMessage.fromRawMessage(message);
         if (ircMessage != null) {
+          ircMessage.sender.userLevel =
+              _userContainer.getLevel(ircMessage.sender.username);
           _handleMessage(ircMessage);
         }
       }
@@ -193,10 +195,8 @@ class IrcConnection {
 
       case MessageType.PRIVMSG:
         _messageController.add(message);
-        if (_isCommand(message)) {
-          message.sender.userLevel = _userContainer.getLevel(message.sender.username);
+        if (_isCommand(message))
           _commandController.add(new IrcCommand.fromIrcMessage(message));
-        }
         break;
 
       case MessageType.INVITE:
