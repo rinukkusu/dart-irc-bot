@@ -32,7 +32,7 @@ class WeatherPlugin extends IrcPluginBase {
     }
   }
 
-  @Command("weather")
+  @Command("weather", const ["location"])
   bool onWeather(IrcCommand command) {
     if (command.arguments.isEmpty) 
       return false;

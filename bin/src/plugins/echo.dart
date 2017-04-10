@@ -4,7 +4,7 @@ class EchoPlugin extends IrcPluginBase {
   @override
   void register() {}
 
-  @Command("echo")
+  @Command("echo", const ["some words"])
   bool onEcho(IrcCommand message) {
     _server.sendMessage(
         message.originalMessage.returnTo, message.rawArgumentString);
