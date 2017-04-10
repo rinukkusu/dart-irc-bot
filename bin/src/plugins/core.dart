@@ -37,7 +37,7 @@ class CorePlugin extends IrcPluginBase {
       }
 
       var handler = _server._commands[commandMeta];
-      bool result = (handler(command) as InstanceMirror).reflectee;
+      bool result = (handler(command) as InstanceMirror).reflectee as bool;
       print(result);
     }
   }

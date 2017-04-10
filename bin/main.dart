@@ -1,6 +1,7 @@
+import 'dart:async';
 import 'src/irc_bot.dart';
 
-main(List<String> args) async {
+Future<int> main(List<String> args) async {
   var server = new IrcConnection("irc.euirc.net")
     ..withUsername("rinubot")
     ..withRealname("hallo i bims")
@@ -8,4 +9,6 @@ main(List<String> args) async {
     ..addOwner("rinukkusu");
 
   await server.connect();
+
+  return 0;
 }

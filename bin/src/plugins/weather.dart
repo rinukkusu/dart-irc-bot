@@ -36,7 +36,7 @@ class WeatherPlugin extends IrcPluginBase {
   @override
   Future<Null> register() async {
     _config = await JsonConfig.fromPath("weather.json");
-    _apiToken = _config.get("ApiToken", "");
+    _apiToken = _config.get("ApiToken", "") as String;
 
     if (_apiToken.isEmpty) {
       _config.set("ApiToken", "");
@@ -46,7 +46,7 @@ class WeatherPlugin extends IrcPluginBase {
       throw new Exception(_T(Messages.EDIT_CONFIG_ERROR, [_config.getPath()]));
     }
 
-    _users = _config.get("Users");
+    _users = _config.get("Users") as Map<String, String>;
   }
 
   @Command("weather", const ["?location"], UserLevel.DEFAULT, const ["w"])
@@ -64,13 +64,13 @@ class WeatherPlugin extends IrcPluginBase {
 
     var url = _getApiUrl(location);
 
-    new http.Client().get(url).then((response) {
+    new http.Client().get(url).then<Null>((response) {
       String body = UTF8.decode(response.bodyBytes);
-      var decoded = JSON.decode(body);
+      var decoded = JSON.decode(body) as Map<String, dynamic>;
 
       if (decoded["cod"] == 200) {
         var ret = RETURN_STRING
-            .replaceAll("%CITY%", decoded["name"])
+            .replaceAll("%CITY%", decoded["name"].toString())
             .replaceAll("%TEMP%", decoded["main"]["temp"].toString())
             .replaceAll("%HUMIDITY%", decoded["main"]["humidity"].toString())
             .replaceAll("%PRESSURE%", decoded["main"]["pressure"].toString());
@@ -80,7 +80,7 @@ class WeatherPlugin extends IrcPluginBase {
 
         (decoded["weather"] as List<Map>).forEach((info) {
           if (weatherInfo.isNotEmpty) weatherInfo += ", ";
-          weatherInfo += info["description"];
+          weatherInfo += info["description"].toString();
 
           if (weatherIcon.isEmpty) {
             var icon = _weatherIcons[info["icon"]];
@@ -94,9 +94,9 @@ class WeatherPlugin extends IrcPluginBase {
             "${command.originalMessage.sender.username}: ${ret}");
       } else {
         _server.sendNotice(
-            command.originalMessage.sender.username, decoded["message"]);
+            command.originalMessage.sender.username, decoded["message"].toString());
       }
-    }).catchError((err) {
+    }).catchError((String err) {
       _server.sendNotice(
           command.originalMessage.sender.username, err.toString());
     });

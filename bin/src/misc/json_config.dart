@@ -2,10 +2,10 @@ part of irc_bot;
 
 class JsonConfig {
   static const String CONFIG_PATH = "./config";
-  Map<String, dynamic> _config = new Map();
+  Map<String, dynamic> _config = new Map<String, dynamic>();
   String _fileName;
   String getPath() => _getPath(_fileName);
-  static String _getPath(fileName) => "${CONFIG_PATH}/${fileName}";
+  static String _getPath(String fileName) => "${CONFIG_PATH}/${fileName}";
 
   static JsonConfig fromMap(String fileName, Map<String, dynamic> config) {
     JsonConfig _this = new JsonConfig();
@@ -15,11 +15,11 @@ class JsonConfig {
   }
 
   static Future<JsonConfig> fromPath(String fileName) async {
-    JsonConfig _this = JsonConfig.fromMap(fileName, {});
+    JsonConfig _this = JsonConfig.fromMap(fileName, <String, dynamic>{});
 
     await _ensurePath(fileName, true, _this);
     var contents = await new File(_getPath(fileName)).readAsString();
-    _this._config = JSON.decode(contents);
+    _this._config = JSON.decode(contents) as Map<String, dynamic>;
 
     return _this;
   }

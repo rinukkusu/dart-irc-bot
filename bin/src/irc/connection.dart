@@ -112,8 +112,8 @@ class IrcConnection {
       if (declaration is ClassMirror) {
         if (declaration.superclass.simpleName == new Symbol("IrcPluginBase")) {
           var pluginName = MirrorSystem.getName(declaration.simpleName);
-          var instance = declaration.newInstance(new Symbol(""), []);
-          registerPlugin(pluginName, instance.reflectee);
+          var instance = declaration.newInstance(new Symbol(""), <dynamic>[]);
+          registerPlugin(pluginName, instance.reflectee as IrcPluginBase);
         }
       }
     });
@@ -130,8 +130,8 @@ class IrcConnection {
       if (methodMirror.metadata
           .any((meta) => meta.type.simpleName == new Symbol("Command"))) {
         addCommand(
-            methodMirror.metadata.first.reflectee,
-            (command) => pluginReflection
+            methodMirror.metadata.first.reflectee as Command,
+            (IrcCommand command) => pluginReflection
                 .invoke(methodMirror.simpleName, [command]));
       }
     });
