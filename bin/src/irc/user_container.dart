@@ -4,7 +4,7 @@ class UserContainer {
   Map<String, int> _users = new Map<String, int>();
 
   void addUser(String name, int userLevel) {
-    _users.putIfAbsent(name, () => userLevel);
+    _users[name] = userLevel;
   }
 
   bool removeUser(String name) {

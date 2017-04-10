@@ -83,4 +83,35 @@ class CorePlugin extends IrcPluginBase {
 
     return true;
   }
+
+  @Command("ignore", const ["user", "?duration"], UserLevel.OWNER)
+  bool onIgnore(IrcCommand command) {
+    var user = command.arguments.first;
+    var duration = parseDuration(command.arguments.last);
+
+    _server.ignoreUser(user);
+    var returnMessage = "";
+
+    if (duration.inSeconds > 0) {
+      new Timer(duration, () => _server.resetUser(user));
+      returnMessage =
+          _T(Messages.IGNORE_USER_DURATION, [user, duration.toString()]);
+    } else {
+      returnMessage = _T(Messages.IGNORE_USER_FOREVER, [user]);
+    }
+
+    _server.sendMessage(command.originalMessage.returnTo,
+        "${command.originalMessage.sender.username}: ${returnMessage}");
+
+    return true;
+  }
+
+  @Command("pardon", const ["user"], UserLevel.OWNER)
+  bool onPardon(IrcCommand command) {
+    var user = command.arguments.first;
+
+    _server.resetUser(user);
+
+    return true;
+  }
 }

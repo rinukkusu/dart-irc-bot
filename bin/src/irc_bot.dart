@@ -22,6 +22,7 @@ part 'irc/plugin_base.dart';
 part 'irc/user_container.dart';
 
 part 'misc/json_config.dart';
+part 'misc/duration_parser.dart';
 
 part 'plugins/core.dart';
 part 'plugins/echo.dart';
