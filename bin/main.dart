@@ -10,5 +10,13 @@ Future<int> main(List<String> args) async {
 
   await server.connect();
 
+  var server2 = new IrcConnection("sub-r.de")
+    ..withUsername("rinubot")
+    ..withRealname("hallo i bims")
+    ..addChannel("#dev")
+    ..addOwner("rinukkusu");
+
+  await server2.connect();
+
   return 0;
 }

@@ -3,4 +3,4 @@ version: 0.0.1
 description: A simple console application.
 dependencies:
   http: any
-  cleverbot: 0.0.3
+  cleverbot: 0.0.7
