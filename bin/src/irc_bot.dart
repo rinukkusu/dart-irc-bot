@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:http/http.dart' as http;
+import 'package:cleverbot/cleverbot.dart';
 
 part 'irc/enums/message_type.dart';
 part 'irc/enums/user_level.dart';
@@ -31,3 +32,4 @@ part 'plugins/ping.dart';
 part 'plugins/invite.dart';
 part 'plugins/weather.dart';
 part 'plugins/random_reply.dart';
+part 'plugins/cleverbot.dart';
