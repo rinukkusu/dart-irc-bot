@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:mirrors';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:http/http.dart' as http;
 
@@ -29,3 +30,4 @@ part 'plugins/echo.dart';
 part 'plugins/ping.dart';
 part 'plugins/invite.dart';
 part 'plugins/weather.dart';
+part 'plugins/random_reply.dart';
