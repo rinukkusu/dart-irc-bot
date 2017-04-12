@@ -33,13 +33,16 @@ class CleverbotPlugin extends IrcPluginBase {
 
     return cleverbot;
   }
-
+ 
   void onMessage(IrcMessage message) {
     var match = _trigger.firstMatch(message.message);
     if (match != null) {
       _getCleverbot(message.returnTo)
-        .think(match.group(1)).then<Null>((cleverMessage) {
-          _server.sendMessage(message.returnTo, cleverMessage);
+          .think(match.group(1))
+          .then<Null>((cleverMessage) {
+        _server.sendMessage(message.returnTo, cleverMessage);
+      }).catchError((Exception error) {
+        _server.sendMessage(message.returnTo, error.toString());
       });
     }
   }
