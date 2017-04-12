@@ -3,7 +3,7 @@ import 'src/irc_bot.dart';
 
 Future<int> main(List<String> args) async {
   var server = new IrcConnection("irc.euirc.net")
-    ..withUsername("rinubot")
+    ..withUsername("dartisan")
     ..withRealname("hallo i bims")
     ..addChannel("#/prog/bot")
     ..addOwner("rinukkusu");
@@ -11,7 +11,7 @@ Future<int> main(List<String> args) async {
   await server.connect();
 
   var server2 = new IrcConnection("sub-r.de")
-    ..withUsername("rinubot")
+    ..withUsername("dartisan")
     ..withRealname("hallo i bims")
     ..addChannel("#dev")
     ..addOwner("rinukkusu");
