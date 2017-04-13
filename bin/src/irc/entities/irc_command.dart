@@ -30,6 +30,7 @@ class IrcCommand {
 
       if (c == '\'') {
         inQuotes = !inQuotes;
+        continue;
       }
 
       if (c == ' ') {
