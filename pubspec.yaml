@@ -4,3 +4,4 @@ description: A simple console application.
 dependencies:
   http: any
   cleverbot: 0.1.0
+  xml: any

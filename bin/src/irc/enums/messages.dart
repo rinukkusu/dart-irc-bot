@@ -17,8 +17,19 @@ class Messages {
 
   static const String IGNORE_USER_DURATION =
       "Ignoring user '{1}' for a duration of {2}.";
-  static const String IGNORE_USER_FOREVER =
-      "Ignoring user '{1}' forever.";
+  static const String IGNORE_USER_FOREVER = "Ignoring user '{1}' forever.";
+
+  static const String RSS_FEED_ADD_SUCCESS =
+      "Successfully added feed for '{1}'";
+  static const String RSS_FEED_ALREADY_EXISTS =
+      "A feed with that title already exists.";
+  static const String RSS_FEED_DELETE_SUCCESS =
+      "Successfully deleted feed '{1}'.";
+  static const String RSS_FEED_NON_EXISTANT =
+      "There is no feed with that title.";
+  static const String RSS_FEED_OUTPUT = "[RSS/{1}] {2} - {3}";
+  static const String RSS_FEED_ERROR =
+      "[ERROR/{1}] {2}";
 }
 
 String _T(String template, [List<dynamic> params = null]) {

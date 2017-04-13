@@ -8,6 +8,7 @@ import 'dart:math';
 
 import 'package:http/http.dart' as http;
 import 'package:cleverbot/cleverbot.dart';
+import 'package:xml/xml.dart' as xml;
 
 part 'irc/enums/message_type.dart';
 part 'irc/enums/user_level.dart';
@@ -35,3 +36,7 @@ part 'plugins/random_reply.dart';
 part 'plugins/cleverbot.dart';
 part 'plugins/google_search.dart';
 part 'plugins/google_url_shortener.dart';
+part 'plugins/rss_reader.dart';
+
+part 'plugins/models/rss_reader/feed_info.dart';
+part 'plugins/models/rss_reader/parser.dart';
