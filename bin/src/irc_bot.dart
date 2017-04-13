@@ -33,3 +33,5 @@ part 'plugins/invite.dart';
 part 'plugins/weather.dart';
 part 'plugins/random_reply.dart';
 part 'plugins/cleverbot.dart';
+part 'plugins/google_search.dart';
+part 'plugins/google_url_shortener.dart';
