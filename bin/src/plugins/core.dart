@@ -44,23 +44,39 @@ class CorePlugin extends IrcPluginBase {
     }
   }
 
-  @Command("help")
+  @Command("help", const ["?command"])
   bool onHelp(IrcCommand command) {
-    var commands = _server._commands.keys.toList()
-      ..sort((x, y) => x.name.compareTo(y.name))
-      ..removeWhere(
-          (x) => command.originalMessage.sender.userLevel < x.minUserLevel);
+    if (command.arguments.isEmpty) {
+      var commands = _server._commands.keys.toList()
+        ..sort((x, y) => x.name.compareTo(y.name))
+        ..removeWhere(
+            (x) => command.originalMessage.sender.userLevel < x.minUserLevel);
 
-    var filteredCommands = commands.map((x) {
-      var c = "${x.name}";
-      if (x.alias.isNotEmpty) {
-        c += "|" + x.alias.join("|");
-      }
-      return c;
-    });
+      var filteredCommands = commands.map((x) {
+        var c = "${x.name}";
+        if (x.alias.isNotEmpty) {
+          c += "|" + x.alias.join("|");
+        }
+        return c;
+      });
 
-    _server.sendMessage(command.originalMessage.returnTo,
-        "${command.originalMessage.sender.username}: ${filteredCommands.toList()}");
+      _server.sendMessage(command.originalMessage.returnTo,
+          "${command.originalMessage.sender.username}: ${filteredCommands.toList()}");
+    } else {
+      var queriedCommand = command.arguments.first;
+      var commandMeta = _server._commands.keys.firstWhere((x) =>
+          x.name == queriedCommand || x.alias.contains(queriedCommand));
+
+      var argumentString = "";
+      commandMeta.arguments.forEach((arg) {
+        argumentString +=
+            arg.startsWith("?") ? "[${arg.substring(1)}] " : "<${arg}> ";
+      });
+      _server.sendMessage(
+          command.originalMessage.returnTo,
+          "${command.originalMessage.sender.username}: ${_T(Messages.COMMAND_WRONG_USAGE,
+              [commandMeta.name, argumentString])}");
+    }
 
     return true;
   }

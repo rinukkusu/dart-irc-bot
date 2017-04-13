@@ -23,7 +23,7 @@ class RssReaderPlugin extends IrcPluginBase {
     }
 
     _timer =
-        new Timer.periodic(new Duration(seconds: 10), (timer) => checkFeeds());
+        new Timer.periodic(new Duration(seconds: 30), (timer) => checkFeeds());
   }
 
   Future<bool> _addFeed(FeedInfo feedInfo) async {
