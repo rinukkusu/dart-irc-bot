@@ -24,9 +24,10 @@ class GoogleSearchPlugin extends IrcPluginBase {
     }
   }
 
-  @Command("google", const ["search text"], UserLevel.DEFAULT, const ["g"])
+  @Command(
+      "google", const ["search text"], UserLevel.DEFAULT, const ["g"], true)
   bool onSearch(IrcCommand command) {
-    var search = command.arguments.first;
+    var search = command.rawArgumentString;
 
     new http.Client()
       ..get(_getUrl(search)).then<Null>((response) {

@@ -49,7 +49,7 @@ class WeatherPlugin extends IrcPluginBase {
     _users = _config.get("Users") as Map<String, String>;
   }
 
-  @Command("weather", const ["?location"], UserLevel.DEFAULT, const ["w"])
+  @Command("weather", const ["?location"], UserLevel.DEFAULT, const ["w"], true)
   bool onWeather(IrcCommand command) {
     var sender = command.originalMessage.sender;
     var location = command.rawArgumentString;

@@ -18,22 +18,24 @@ class CorePlugin extends IrcPluginBase {
         return;
       }
 
-      int minLength =
-          commandMeta.arguments.where((x) => !x.startsWith("?")).length;
-      int maxLength = commandMeta.arguments.length;
+      if (!commandMeta.ignoreArgumentCount) {
+        int minLength =
+            commandMeta.arguments.where((x) => !x.startsWith("?")).length;
+        int maxLength = commandMeta.arguments.length;
 
-      if (command.arguments.length < minLength ||
-          command.arguments.length > maxLength) {
-        var argumentString = "";
-        commandMeta.arguments.forEach((arg) {
-          argumentString +=
-              arg.startsWith("?") ? "[${arg.substring(1)}] " : "<${arg}> ";
-        });
-        _server.sendNotice(
-            command.originalMessage.sender.username,
-            _T(Messages.COMMAND_WRONG_USAGE,
-                [commandMeta.name, argumentString]));
-        return;
+        if (command.arguments.length < minLength ||
+            command.arguments.length > maxLength) {
+          var argumentString = "";
+          commandMeta.arguments.forEach((arg) {
+            argumentString +=
+                arg.startsWith("?") ? "[${arg.substring(1)}] " : "<${arg}> ";
+          });
+          _server.sendNotice(
+              command.originalMessage.sender.username,
+              _T(Messages.COMMAND_WRONG_USAGE,
+                  [commandMeta.name, argumentString]));
+          return;
+        }
       }
 
       var handler = _server._commands[commandMeta];
