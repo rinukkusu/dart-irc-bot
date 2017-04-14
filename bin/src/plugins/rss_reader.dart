@@ -12,7 +12,7 @@ class RssReaderPlugin extends IrcPluginBase {
     _configKey = _server._host;
 
     _config = await JsonConfig.fromPath("rss_reader.json");
-    var feedMap = _config.get(_configKey);
+    dynamic feedMap = _config.get(_configKey);
 
     if (feedMap != null) {
       (feedMap as List<Map<String, String>>)
@@ -80,7 +80,7 @@ class RssReaderPlugin extends IrcPluginBase {
         }
       } catch (error) {
         _server.sendMessage(feedInfo.channel,
-            _T(Messages.RSS_FEED_ERROR, [feedInfo.title, error]));
+            _T(Messages.RSS_FEED_ERROR, <String>[feedInfo.title, error.toString()]));
       }
     });
   }
@@ -92,7 +92,7 @@ class RssReaderPlugin extends IrcPluginBase {
     var url = command.arguments.last;
 
     var feedInfo = new FeedInfo(channel, title, url);
-    _addFeed(feedInfo).then((success) {
+    _addFeed(feedInfo).then<Null>((success) {
       if (success) {
         _server.sendMessage(
             channel, _T(Messages.RSS_FEED_ADD_SUCCESS, [feedInfo.title]));
@@ -107,7 +107,7 @@ class RssReaderPlugin extends IrcPluginBase {
     var channel = command.originalMessage.returnTo;
     var title = command.arguments.first;
 
-    _deleteFeed(title).then((success) {
+    _deleteFeed(title).then<Null>((success) {
       if (success) {
         _server.sendMessage(
             channel, _T(Messages.RSS_FEED_DELETE_SUCCESS, [title]));
@@ -115,5 +115,7 @@ class RssReaderPlugin extends IrcPluginBase {
         _server.sendMessage(channel, _T(Messages.RSS_FEED_NON_EXISTANT));
       }
     });
+
+    return true;
   }
 }

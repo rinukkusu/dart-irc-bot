@@ -4,7 +4,12 @@ class FeedItem {
   String title;
   String url;
 
-  FeedItem(this.title, this.url);
+  FeedItem(this.title, this.url) {
+    if (this.title.length > 110) {
+      this.title = this.title.substring(0, 110);
+      this.title += "...";
+    }
+  }
 }
 
 class Feed {
