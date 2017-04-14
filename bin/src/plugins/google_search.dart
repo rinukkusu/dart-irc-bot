@@ -35,15 +35,21 @@ class GoogleSearchPlugin extends IrcPluginBase {
         var string = UTF8.decode(bytes);
         var obj = JSON.decode(string) as Map<String, dynamic>;
 
-        var item = obj["items"][0] as Map<String, dynamic>;
+        if (obj["items"] != null) {
+          var item = obj["items"][0] as Map<String, dynamic>;
 
-        var title = item["title"] as String;
-        var url = item["link"] as String;
+          var title = item["title"] as String;
+          var url = item["link"] as String;
 
-        GoogleUrlShortenerPlugin.shortenUrl(url).then<Null>((shortenedUrl) {
+          GoogleUrlShortenerPlugin.shortenUrl(url).then<Null>((shortenedUrl) {
+            _server.sendMessage(
+                command.originalMessage.returnTo, "${title} - ${shortenedUrl}");
+          });
+        }
+        else {
           _server.sendMessage(
-              command.originalMessage.returnTo, "${title} - ${shortenedUrl}");
-        });
+                command.originalMessage.returnTo, "${command.originalMessage.sender.username}: No results.");
+        }
       });
 
     return true;
