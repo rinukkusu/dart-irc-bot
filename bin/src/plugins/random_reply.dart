@@ -29,6 +29,8 @@ class RandomReplyPlugin extends IrcPluginBase {
       _replies.add(newReply);
       _config.save();
     } else {
+      if (message.message.startsWith(_server._username)) return;
+      
       var replyMatch = _replyTrigger.firstMatch(message.message);
       if (replyMatch != null) {
         var i = _replies.length > 1 ? _rand.nextInt(_replies.length - 1) : 0;
