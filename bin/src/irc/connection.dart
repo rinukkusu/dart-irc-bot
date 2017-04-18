@@ -156,7 +156,7 @@ class IrcConnection {
   }
 
   void _onData(List<int> data) {
-    String messageRaw = UTF8.decode(data);
+    String messageRaw = UTF8.decode(data, allowMalformed: true);
     var messages = messageRaw.replaceAll("\r", "").split("\n");
 
     messages.forEach((message) {
