@@ -79,8 +79,10 @@ class RssReaderPlugin extends IrcPluginBase {
           feedInfo.initializeWithItems(feed.items);
         }
       } catch (error) {
-        _server.sendMessage(feedInfo.channel,
-            _T(Messages.RSS_FEED_ERROR, <String>[feedInfo.title, error.toString()]));
+        _server.sendMessage(
+            feedInfo.channel,
+            _T(Messages.RSS_FEED_ERROR,
+                <String>[feedInfo.title, error.toString()]));
       }
     });
   }
@@ -115,6 +117,16 @@ class RssReaderPlugin extends IrcPluginBase {
         _server.sendMessage(channel, _T(Messages.RSS_FEED_NON_EXISTANT));
       }
     });
+
+    return true;
+  }
+
+  @Command("rsslist")
+  bool onListRssFeeds(IrcCommand command) {
+    var channel = command.originalMessage.returnTo;
+
+    var feeds = _feeds.map((f) => f.title).toList();
+    _server.sendMessage(channel, feeds);
 
     return true;
   }
