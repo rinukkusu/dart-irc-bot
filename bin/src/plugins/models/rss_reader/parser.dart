@@ -29,11 +29,18 @@ class Feed {
 
     Iterable<xml.XmlElement> rootElements = null;
 
+    feed.items = new List<FeedItem>();
+
     rootElements = document.findAllElements("rdf:RDF");
     if (rootElements.isNotEmpty) return feed._parseRdf(rootElements.first);
 
     rootElements = document.findAllElements("rss");
     if (rootElements.isNotEmpty) return feed._parseRss(rootElements.first);
+
+    rootElements = document.findAllElements("feed");
+    if (rootElements.isNotEmpty) return feed._parseAtom(rootElements.first);
+
+
 
     return feed;
   }
@@ -41,7 +48,6 @@ class Feed {
   Feed _parseRss(xml.XmlElement rss) {
     var channel = rss.findElements("channel").first;
 
-    items = new List<FeedItem>();
     var feedItems = channel.findElements("item");
     feedItems.forEach((i) {
       var title = i.findElements("title").first.text;
@@ -54,8 +60,19 @@ class Feed {
   }
 
   Feed _parseRdf(xml.XmlElement rdf) {
-    items = new List<FeedItem>();
     var feedItems = rdf.findElements("item");
+    feedItems.forEach((i) {
+      var title = i.findElements("title").first.text;
+      var url = i.findElements("link").first.text;
+
+      items.add(new FeedItem(title, url));
+    });
+
+    return this;
+  }
+
+  Feed _parseAtom(xml.XmlElement atom) {
+    var feedItems = atom.findElements("entry");
     feedItems.forEach((i) {
       var title = i.findElements("title").first.text;
       var url = i.findElements("link").first.text;
