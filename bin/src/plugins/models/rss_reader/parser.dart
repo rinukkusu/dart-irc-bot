@@ -22,7 +22,8 @@ class Feed {
     var client = new http.Client();
     var response = await client.get(url);
     //var bytes = response.bodyBytes;
-    var string = UTF8.decode(response.body);
+    //var string = UTF8.decode(bytes);
+    var string = response.body;
 
     var document = xml.parse(string);
 
