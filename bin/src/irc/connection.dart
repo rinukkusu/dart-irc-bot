@@ -167,7 +167,11 @@ class IrcConnection {
         if (ircMessage != null) {
           ircMessage.sender.userLevel =
               _userContainer.getLevel(ircMessage.sender.username);
-          _handleMessage(ircMessage);
+
+          runZoned(() => _handleMessage(ircMessage),
+              onError: (error, stacktrace) {
+            sendMessage(ircMessage.returnTo, "[Unhandled]: $error");
+          });
         }
       }
     });
