@@ -5,3 +5,4 @@ dependencies:
   http: any
   cleverbot: 0.1.0
   xml: any
+  markov: 1.0.1

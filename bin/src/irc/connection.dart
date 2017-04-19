@@ -169,7 +169,7 @@ class IrcConnection {
               _userContainer.getLevel(ircMessage.sender.username);
 
           runZoned(() => _handleMessage(ircMessage),
-              onError: (error, stacktrace) {
+              onError: (Exception error, StackTrace stacktrace) {
             sendMessage(ircMessage.returnTo, "[Unhandled]: $error");
           });
         }

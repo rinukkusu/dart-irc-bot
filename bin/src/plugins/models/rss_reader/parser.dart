@@ -40,9 +40,7 @@ class Feed {
     rootElements = document.findAllElements("feed");
     if (rootElements.isNotEmpty) return feed._parseAtom(rootElements.first);
 
-
-
-    return feed;
+    return null;
   }
 
   Feed _parseRss(xml.XmlElement rss) {

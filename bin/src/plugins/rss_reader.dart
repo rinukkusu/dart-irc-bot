@@ -27,6 +27,8 @@ class RssReaderPlugin extends IrcPluginBase {
   }
 
   Future<bool> _addFeed(FeedInfo feedInfo) async {
+    if (feedInfo == null) return false;
+
     var existingFeed =
         _feeds.firstWhere((f) => f.title == feedInfo.title, orElse: () => null);
 
@@ -97,11 +99,14 @@ class RssReaderPlugin extends IrcPluginBase {
     _addFeed(feedInfo).then<Null>((success) {
       if (success) {
         _server.sendMessage(
-            channel, _T(Messages.RSS_FEED_ADD_SUCCESS, [feedInfo.title]));
+            channel, _T(Messages.RSS_FEED_ADD_SUCCESS, [title]));
       } else {
-        _server.sendMessage(channel, _T(Messages.RSS_FEED_ALREADY_EXISTS));
+        _server.sendMessage(
+            channel, _T(Messages.RSS_FEED_ADD_FAILURE, [title]));
       }
     });
+
+    return true;
   }
 
   @Command("rssdel", const ["title"])
@@ -126,7 +131,7 @@ class RssReaderPlugin extends IrcPluginBase {
     var channel = command.originalMessage.returnTo;
 
     var feeds = _feeds.map((f) => f.title).toList();
-    _server.sendMessage(channel, feeds);
+    _server.sendMessage(channel, feeds.toString());
 
     return true;
   }
