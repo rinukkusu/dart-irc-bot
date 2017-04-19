@@ -65,6 +65,12 @@ class RssReaderPlugin extends IrcPluginBase {
       try {
         var feed = await Feed.fromUrl(feedInfo.url);
 
+        if (feed == null) {
+          _server.sendMessage(feedInfo.channel,
+              _T(Messages.RSS_FEED_PARSE_FAILURE, [feedInfo.title]));
+          new Timer(new Duration(seconds: 5), () => feeds.remove(feedInfo));
+        }
+
         if (feedInfo.items.isNotEmpty) {
           var newItems = feedInfo.getNewItems(feed.items);
 
