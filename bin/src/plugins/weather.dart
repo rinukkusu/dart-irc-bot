@@ -7,7 +7,7 @@ class WeatherPlugin extends IrcPluginBase {
       "%CITY% | %TEMP%°C | %WEATHERINFO% | H: %HUMIDITY%%, P: %PRESSURE%hPa";
   String _apiToken = "";
   Map<String, String> _users = new Map();
-  String _getApiUrl(String place) => "${API_URL}&APPID=${_apiToken}&q=${place}";
+  String _getApiUrl(String place) => "${API_URL}&APPID=${_apiToken}&q=${Uri.encodeQueryComponent(place)}";
 
   // d = day, n = night
   Map<String, String> _weatherIcons = {
