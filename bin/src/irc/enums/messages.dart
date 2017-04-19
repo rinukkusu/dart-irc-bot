@@ -24,7 +24,7 @@ class Messages {
   static const String RSS_FEED_ADD_FAILURE =
       "A feed with that title already exists.";
   static const String RSS_FEED_PARSE_FAILURE =
-      "Feed {1} didn't look like a valid RDF/RSS or Atom feed and has been removed.";
+      "Feed '{1}' didn't look like a valid RDF/RSS or Atom feed and has been removed.";
   static const String RSS_FEED_DELETE_SUCCESS =
       "Successfully deleted feed '{1}'.";
   static const String RSS_FEED_NON_EXISTANT =

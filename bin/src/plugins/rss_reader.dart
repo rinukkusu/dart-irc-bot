@@ -68,7 +68,13 @@ class RssReaderPlugin extends IrcPluginBase {
         if (feed == null) {
           _server.sendMessage(feedInfo.channel,
               _T(Messages.RSS_FEED_PARSE_FAILURE, [feedInfo.title]));
-          new Timer(new Duration(seconds: 5), () => feeds.remove(feedInfo));
+          new Timer(new Duration(seconds: 5), () {
+            _feeds.remove(feedInfo);
+            _config.set(_configKey, _feeds.map((f) => f.toMap()).toList());
+            _config.save();
+          });
+
+          return;
         }
 
         if (feedInfo.items.isNotEmpty) {
