@@ -9,7 +9,7 @@ import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:cleverbot/cleverbot.dart';
 import 'package:xml/xml.dart' as xml;
-import 'package:markov/markov.dart';
+import 'package:markov_dart/markov_dart.dart';
 
 part 'irc/enums/message_type.dart';
 part 'irc/enums/user_level.dart';
