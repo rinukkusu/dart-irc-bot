@@ -12,11 +12,13 @@ class MarkovPlugin extends IrcPluginBase {
     _configKey = _server._host;
 
     _config = await JsonConfig.fromPath("markov.json");
-    _messageMap = _config.get(_configKey);
+    var map = _config.get(_configKey);
 
-    if (_messageMap == null) {
+    if (map == null) {
       await _save();
     }
+
+    _messageMap = map;
 
     _regenerateChains();
 
