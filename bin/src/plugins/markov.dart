@@ -17,9 +17,10 @@ class MarkovPlugin extends IrcPluginBase {
     if (map == null) {
       await _save();
     }
-
-    _messageMap = map;
-
+    else {
+      _messageMap = map; 
+    }
+    
     _regenerateChains();
 
     _server.messages.listen(onMessage);
