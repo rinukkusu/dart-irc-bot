@@ -16,11 +16,10 @@ class MarkovPlugin extends IrcPluginBase {
 
     if (map == null) {
       await _save();
+    } else {
+      _messageMap = map;
     }
-    else {
-      _messageMap = map; 
-    }
-    
+
     _regenerateChains();
 
     _server.messages.listen(onMessage);
@@ -36,6 +35,9 @@ class MarkovPlugin extends IrcPluginBase {
       _newMessages[channel] = new List<String>();
 
     _newMessages[channel].add(message.message);
+    
+    _tryGetChain(channel)
+        .then((chain) => chain.add(_tokenize(message.message)));
   }
 
   Future<Null> _updateNewMessages() async {
@@ -49,7 +51,6 @@ class MarkovPlugin extends IrcPluginBase {
 
       _newMessages.clear();
 
-      _regenerateChains();
       await _save();
     }
   }
