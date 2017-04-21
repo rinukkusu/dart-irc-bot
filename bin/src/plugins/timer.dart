@@ -13,9 +13,12 @@ class TimerPlugin extends IrcPluginBase {
       _server.sendMessage(command.originalMessage.returnTo,
           "${command.originalMessage.sender.username}: time lower than 1 second.");
 
+    _server.sendMessage(command.originalMessage.returnTo,
+        "${command.originalMessage.sender.username}: reminding you in ${duration}");
+
     new Timer(duration, () {
       _server.sendMessage(command.originalMessage.returnTo,
-          "${command.originalMessage.sender.username}: {message}");
+          "${command.originalMessage.sender.username}: ${message}");
     });
   }
 }
