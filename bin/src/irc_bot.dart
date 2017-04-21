@@ -40,6 +40,7 @@ part 'plugins/google_url_shortener.dart';
 part 'plugins/rss_reader.dart';
 part 'plugins/markov.dart';
 part 'plugins/timer.dart';
+part 'plugins/realtalk.dart';
 
 part 'plugins/models/rss_reader/feed_info.dart';
 part 'plugins/models/rss_reader/parser.dart';
