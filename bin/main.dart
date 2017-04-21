@@ -14,6 +14,7 @@ Future<int> main(List<String> args) async {
     ..withUsername("dartisan")
     ..withRealname("hallo i bims")
     ..addChannel("#dev")
+    ..addChannel("#hollz")
     ..addOwner("rinukkusu");
 
   await server2.connect();
