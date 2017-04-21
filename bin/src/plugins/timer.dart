@@ -8,17 +8,22 @@ class TimerPlugin extends IrcPluginBase {
   bool onTimer(IrcCommand command) {
     Duration duration = parseDuration(command.arguments.first);
     var message =
-        command.arguments.length > 1 ? command.arguments[1] : "Aufgemerkt!";
-    if (duration.inSeconds < 1)
+        command.arguments.length > 1 ? command.arguments[1] : "Timer ran out!";
+    if (duration.inSeconds < 1) {
       _server.sendMessage(command.originalMessage.returnTo,
-          "${command.originalMessage.sender.username}: time lower than 1 second.");
+          "${command.originalMessage.sender.username}: Time lower than 1 second.");
+      return false;
+    }
 
+    var readableDuration = getReadableDuration(duration);
     _server.sendMessage(command.originalMessage.returnTo,
-        "${command.originalMessage.sender.username}: reminding you in ${duration}");
+        "${command.originalMessage.sender.username}: Reminding you in ~${readableDuration}");
 
     new Timer(duration, () {
       _server.sendMessage(command.originalMessage.returnTo,
           "${command.originalMessage.sender.username}: ${message}");
     });
+
+    return true;
   }
 }

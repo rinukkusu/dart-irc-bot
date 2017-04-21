@@ -12,3 +12,32 @@ Duration parseDuration(String durationString) {
   return new Duration(
       days: days, hours: hours, minutes: minutes, seconds: seconds);
 }
+
+String getReadableDuration(Duration difference) {
+  if (difference.inDays >= 365) {
+    int val = (difference.inDays / 365).floor();
+    return buildAgoString("year", val);
+  } else if (difference.inDays >= 30) {
+    int val = (difference.inDays / 30).floor();
+    return buildAgoString("month", val);
+  } else if (difference.inDays >= 7) {
+    int val = (difference.inDays / 7).floor();
+    return buildAgoString("week", val);
+  } else if (difference.inDays >= 1) {
+    int val = difference.inDays.floor();
+    return buildAgoString("day", val);
+  } else if (difference.inHours >= 1) {
+    int val = difference.inHours.floor();
+    return buildAgoString("hour", val);
+  } else if (difference.inMinutes >= 1) {
+    int val = difference.inMinutes.floor();
+    return buildAgoString("minute", val);
+  } else {
+    int val = difference.inSeconds.floor();
+    return buildAgoString("second", val);
+  }
+}
+
+String buildAgoString(String unit, int value) {
+  return value.toString() + " " + unit + (value != 1 ? "s" : "");
+}
