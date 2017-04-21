@@ -16,7 +16,7 @@ class RealtalkPlugin extends IrcPluginBase {
         upperCount++;
     }
 
-    if (upperCount / msg.length > 0.8) {
+    if (upperCount / msg.replaceAll(r"\s", "").length > 0.8) {
       _server.sendMessage(message.returnTo, "REALTALK");
     }
   }
