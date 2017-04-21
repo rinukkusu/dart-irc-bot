@@ -64,8 +64,8 @@ class CorePlugin extends IrcPluginBase {
           "${command.originalMessage.sender.username}: ${filteredCommands.toList()}");
     } else {
       var queriedCommand = command.arguments.first;
-      var commandMeta = _server._commands.keys.firstWhere((x) =>
-          x.name == queriedCommand || x.alias.contains(queriedCommand));
+      var commandMeta = _server._commands.keys.firstWhere(
+          (x) => x.name == queriedCommand || x.alias.contains(queriedCommand));
 
       var argumentString = "";
       commandMeta.arguments.forEach((arg) {
@@ -109,6 +109,7 @@ class CorePlugin extends IrcPluginBase {
       return false;
 
     var duration = parseDuration(command.arguments.last);
+    if (duration == null) return false;
 
     _server.ignoreUser(user);
     var returnMessage = "";

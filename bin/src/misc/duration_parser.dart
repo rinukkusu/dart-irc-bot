@@ -9,8 +9,14 @@ Duration parseDuration(String durationString) {
   var minutes = int.parse(match?.group(3) ?? "0");
   var seconds = int.parse(match?.group(4) ?? "0");
 
-  return new Duration(
+  var duration = new Duration(
       days: days, hours: hours, minutes: minutes, seconds: seconds);
+
+  if (duration.inDays > 1000) {
+    return null;
+  }
+
+  return duration;
 }
 
 String getReadableDuration(Duration difference) {
