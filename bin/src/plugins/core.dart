@@ -153,4 +153,13 @@ class CorePlugin extends IrcPluginBase {
 
     return true;
   }
+
+  @Command("crash", const ["?message"], UserLevel.OWNER)
+  bool onCrash(IrcCommand command) {
+    throw new AssertionError(command.arguments.isNotEmpty
+        ? command.rawArgumentString
+        : "crash test");
+
+    return true;
+  }
 }
