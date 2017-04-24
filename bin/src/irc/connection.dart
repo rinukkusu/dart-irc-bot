@@ -3,6 +3,7 @@ part of irc_bot;
 class IrcConnection {
   Socket _socket;
 
+  String _alias;
   String _host;
   int _port;
   String _username = "dartbot";
@@ -29,7 +30,7 @@ class IrcConnection {
   Map<Command, Function> _commands = new Map<Command, Function>();
   List<String> _channels = new List<String>();
 
-  IrcConnection(String host, [int port = 6667]) {
+  IrcConnection(String alias, String host, [int port = 6667]) {
     rawMessages = _rawController.stream.asBroadcastStream();
     pongs = _pongController.stream.asBroadcastStream();
     notices = _noticeController.stream.asBroadcastStream();
@@ -39,6 +40,7 @@ class IrcConnection {
 
     _registerCorePlugins();
 
+    _alias = alias;
     _host = host;
     _port = port;
   }
@@ -47,6 +49,39 @@ class IrcConnection {
   String withRealname(String realname) => _realname = realname;
   String withPassword(String password) => _password = password;
   String withCommandChar(String commandChar) => _commandChar = commandChar;
+
+  static Future<List<IrcConnection>> loadFromConfig() async {
+    var config = await JsonConfig.fromPath("main.json");
+    var servers = config.get("servers") as Map<String, Map<String, dynamic>>;
+
+    if (servers != null) {
+      List<IrcConnection> connections = new List<IrcConnection>();
+
+      servers.forEach((alias, settingsMap) {
+        var settings = new ConnectionSettings.fromMap(settingsMap);
+
+        var connection = new IrcConnection(alias, settings.host, settings.port)
+          ..withCommandChar(settings.commandChar)
+          ..withUsername(settings.username)
+          ..withRealname(settings.realname)
+          ..withPassword(settings.password);
+
+        settings.channels.forEach((channel) => connection.addChannel(channel));
+        settings.owners.forEach((owner) => connection.addOwner(owner));
+
+        connections.add(connection);
+      });
+
+      return connections;
+    } else {
+      var servers = new Map<String, Map<String, dynamic>>();
+      servers["irc-server"] = new ConnectionSettings().toMap();
+      config.set("servers", servers);
+      await config.save();
+
+      throw _T(Messages.EDIT_CONFIG_ERROR, <String>[config.getPath()]);
+    }
+  }
 
   Future<Null> connect() async {
     _socket = await Socket.connect(_host, _port);

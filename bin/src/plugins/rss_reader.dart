@@ -9,7 +9,7 @@ class RssReaderPlugin extends IrcPluginBase {
 
   @override
   Future<Null> register() async {
-    _configKey = _server._host;
+    _configKey = _server._alias;
 
     _config = await JsonConfig.fromPath("rss_reader.json");
     dynamic feedMap = _config.get(_configKey);

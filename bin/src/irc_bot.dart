@@ -18,6 +18,7 @@ part 'irc/enums/messages.dart';
 part 'irc/entities/irc_command.dart';
 part 'irc/entities/irc_message.dart';
 part 'irc/entities/sender.dart';
+part 'irc/entities/connection_settings.dart';
 
 part 'irc/annotations/command_annotation.dart';
 

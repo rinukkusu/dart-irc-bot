@@ -9,7 +9,7 @@ class MarkovPlugin extends IrcPluginBase {
 
   @override
   Future<Null> register() async {
-    _configKey = _server._host;
+    _configKey = _server._alias;
 
     _config = await JsonConfig.fromPath("markov.json");
     var map = _config.get(_configKey) as Map<String, List<String>>;
