@@ -38,9 +38,15 @@ class CorePlugin extends IrcPluginBase {
         }
       }
 
-      var handler = _server._commands[commandMeta];
-      bool result = (handler(command) as InstanceMirror).reflectee as bool;
-      print(result);
+      // run command in zone to not crash
+      runZoned(() {
+        var handler = _server._commands[commandMeta];
+        bool result = (handler(command) as InstanceMirror).reflectee as bool;
+        print(result);
+      }, onError: (Exception error, StackTrace stacktrace) {
+        _server.sendMessage(
+            command.originalMessage.returnTo, "[Unhandled]: $error");
+      });
     }
   }
 
@@ -116,8 +122,8 @@ class CorePlugin extends IrcPluginBase {
 
     if (duration.inSeconds > 0) {
       new Timer(duration, () => _server.resetUser(user));
-      returnMessage =
-          _T(Messages.IGNORE_USER_DURATION, <String>[user, duration.toString()]);
+      returnMessage = _T(
+          Messages.IGNORE_USER_DURATION, <String>[user, duration.toString()]);
     } else {
       returnMessage = _T(Messages.IGNORE_USER_FOREVER, <String>[user]);
     }
