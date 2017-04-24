@@ -7,7 +7,8 @@ class WeatherPlugin extends IrcPluginBase {
       "%CITY% | %TEMP%°C | %WEATHERINFO% | H: %HUMIDITY%%, P: %PRESSURE%hPa";
   String _apiToken = "";
   Map<String, String> _users = new Map();
-  String _getApiUrl(String place) => "${API_URL}&APPID=${_apiToken}&q=${Uri.encodeQueryComponent(place)}";
+  String _getApiUrl(String place) =>
+      "${API_URL}&APPID=${_apiToken}&q=${Uri.encodeQueryComponent(place)}";
 
   // d = day, n = night
   Map<String, String> _weatherIcons = {
@@ -43,7 +44,8 @@ class WeatherPlugin extends IrcPluginBase {
       _config.set("Users", _users);
       await _config.save();
 
-      throw new Exception(_T(Messages.EDIT_CONFIG_ERROR, [_config.getPath()]));
+      throw new Exception(
+          _T(Messages.EDIT_CONFIG_ERROR, <String>[_config.getPath()]));
     }
 
     _users = _config.get("Users") as Map<String, String>;
@@ -93,8 +95,8 @@ class WeatherPlugin extends IrcPluginBase {
         _server.sendMessage(command.originalMessage.returnTo,
             "${command.originalMessage.sender.username}: ${ret}");
       } else {
-        _server.sendNotice(
-            command.originalMessage.sender.username, decoded["message"].toString());
+        _server.sendNotice(command.originalMessage.sender.username,
+            decoded["message"].toString());
       }
     }).catchError((String err) {
       _server.sendNotice(
@@ -114,7 +116,7 @@ class WeatherPlugin extends IrcPluginBase {
     _config.save();
 
     _server.sendMessage(command.originalMessage.returnTo,
-        "${sender.username}: ${_T(Messages.WEATHER_LOCATION_SET, [location])}");
+        "${sender.username}: ${_T(Messages.WEATHER_LOCATION_SET, <String>[location])}");
 
     return true;
   }

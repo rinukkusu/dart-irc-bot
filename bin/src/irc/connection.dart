@@ -131,8 +131,8 @@ class IrcConnection {
           .any((meta) => meta.type.simpleName == new Symbol("Command"))) {
         addCommand(
             methodMirror.metadata.first.reflectee as Command,
-            (IrcCommand command) =>
-                pluginReflection.invoke(methodMirror.simpleName, [command]));
+            (IrcCommand command) => pluginReflection
+                .invoke(methodMirror.simpleName, <dynamic>[command]));
       }
     });
   }

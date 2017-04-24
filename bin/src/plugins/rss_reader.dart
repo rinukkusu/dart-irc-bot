@@ -67,7 +67,7 @@ class RssReaderPlugin extends IrcPluginBase {
 
         if (feed == null) {
           _server.sendMessage(feedInfo.channel,
-              _T(Messages.RSS_FEED_PARSE_FAILURE, [feedInfo.title]));
+              _T(Messages.RSS_FEED_PARSE_FAILURE, <String>[feedInfo.title]));
           new Timer(new Duration(seconds: 5), () {
             _feeds.remove(feedInfo);
             _config.set(_configKey, _feeds.map((f) => f.toMap()).toList());
@@ -86,7 +86,7 @@ class RssReaderPlugin extends IrcPluginBase {
               _server.sendMessage(
                   feedInfo.channel,
                   _T(Messages.RSS_FEED_OUTPUT,
-                      [feedInfo.title, item.title, url]));
+                      <String>[feedInfo.title, item.title, url]));
             });
           }
         } else {
@@ -111,10 +111,10 @@ class RssReaderPlugin extends IrcPluginBase {
     _addFeed(feedInfo).then<Null>((success) {
       if (success) {
         _server.sendMessage(
-            channel, _T(Messages.RSS_FEED_ADD_SUCCESS, [title]));
+            channel, _T(Messages.RSS_FEED_ADD_SUCCESS, <String>[title]));
       } else {
         _server.sendMessage(
-            channel, _T(Messages.RSS_FEED_ADD_FAILURE, [title]));
+            channel, _T(Messages.RSS_FEED_ADD_FAILURE, <String>[title]));
       }
     });
 
@@ -129,7 +129,7 @@ class RssReaderPlugin extends IrcPluginBase {
     _deleteFeed(title).then<Null>((success) {
       if (success) {
         _server.sendMessage(
-            channel, _T(Messages.RSS_FEED_DELETE_SUCCESS, [title]));
+            channel, _T(Messages.RSS_FEED_DELETE_SUCCESS, <String>[title]));
       } else {
         _server.sendMessage(channel, _T(Messages.RSS_FEED_NON_EXISTANT));
       }

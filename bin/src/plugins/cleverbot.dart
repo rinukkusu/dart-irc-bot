@@ -16,7 +16,8 @@ class CleverbotPlugin extends IrcPluginBase {
       _config.set("ApiToken", "");
       await _config.save();
 
-      throw new Exception(_T(Messages.EDIT_CONFIG_ERROR, [_config.getPath()]));
+      throw new Exception(
+          _T(Messages.EDIT_CONFIG_ERROR, <String>[_config.getPath()]));
     }
 
     _trigger = new RegExp("^${_server._username}\\W\\s?(.*)");
@@ -33,7 +34,7 @@ class CleverbotPlugin extends IrcPluginBase {
 
     return cleverbot;
   }
- 
+
   void onMessage(IrcMessage message) {
     var match = _trigger.firstMatch(message.message);
     if (match != null) {

@@ -33,7 +33,7 @@ class CorePlugin extends IrcPluginBase {
           _server.sendNotice(
               command.originalMessage.sender.username,
               _T(Messages.COMMAND_WRONG_USAGE,
-                  [commandMeta.name, argumentString]));
+                  <String>[commandMeta.name, argumentString]));
           return;
         }
       }
@@ -75,7 +75,7 @@ class CorePlugin extends IrcPluginBase {
       _server.sendMessage(
           command.originalMessage.returnTo,
           "${command.originalMessage.sender.username}: ${_T(Messages.COMMAND_WRONG_USAGE,
-              [commandMeta.name, argumentString])}");
+              <String>[commandMeta.name, argumentString])}");
     }
 
     return true;
@@ -117,9 +117,9 @@ class CorePlugin extends IrcPluginBase {
     if (duration.inSeconds > 0) {
       new Timer(duration, () => _server.resetUser(user));
       returnMessage =
-          _T(Messages.IGNORE_USER_DURATION, [user, duration.toString()]);
+          _T(Messages.IGNORE_USER_DURATION, <String>[user, duration.toString()]);
     } else {
-      returnMessage = _T(Messages.IGNORE_USER_FOREVER, [user]);
+      returnMessage = _T(Messages.IGNORE_USER_FOREVER, <String>[user]);
     }
 
     _server.sendMessage(command.originalMessage.returnTo,
