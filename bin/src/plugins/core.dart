@@ -45,7 +45,7 @@ class CorePlugin extends IrcPluginBase {
         print(result);
       }, onError: (Exception error, StackTrace stacktrace) {
         _server.sendMessage(
-            command.originalMessage.returnTo, "[Unhandled]: $error");
+            command.originalMessage.returnTo, "[Unhandled Error]: $error");
       });
     }
   }
