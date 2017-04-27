@@ -8,7 +8,7 @@ class EchoPlugin extends IrcPluginBase {
   bool onEcho(IrcCommand message) {
     _server.sendMessage(
         message.originalMessage.returnTo, message.rawArgumentString);
-        
+
     return true;
   }
 }

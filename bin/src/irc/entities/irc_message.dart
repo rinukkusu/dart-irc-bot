@@ -31,7 +31,6 @@ class IrcMessage {
           returnTo = sender.username;
         }
       }
-
     }
   }
 }

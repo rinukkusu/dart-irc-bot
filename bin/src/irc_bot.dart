@@ -38,6 +38,7 @@ part 'plugins/random_reply.dart';
 part 'plugins/cleverbot.dart';
 part 'plugins/google_search.dart';
 part 'plugins/google_url_shortener.dart';
+part 'plugins/google_maps.dart';
 part 'plugins/rss_reader.dart';
 part 'plugins/markov.dart';
 part 'plugins/timer.dart';

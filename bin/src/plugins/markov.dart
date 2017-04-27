@@ -35,7 +35,7 @@ class MarkovPlugin extends IrcPluginBase {
       _newMessages[channel] = new List<String>();
 
     _newMessages[channel].add(message.message);
-    
+
     _tryGetChain(channel)
         .then((chain) => chain.add(_tokenize(message.message)));
   }

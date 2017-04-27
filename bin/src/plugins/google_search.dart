@@ -3,7 +3,7 @@ part of irc_bot;
 class GoogleSearchPlugin extends IrcPluginBase {
   static String _baseUrl = "https://www.googleapis.com/customsearch/v1";
   String _getUrl(String search) =>
-      "${_baseUrl}?key=${_apiToken}&cx=${_customSearchId}&q=${search}";
+      "${_baseUrl}?key=${_apiToken}&cx=${_customSearchId}&q=${Uri.encodeQueryComponent(search)}";
 
   String _apiToken;
   String _customSearchId;
@@ -20,7 +20,8 @@ class GoogleSearchPlugin extends IrcPluginBase {
       config.set("CustomSearchId", "");
       await config.save();
 
-      throw new Exception(_T(Messages.EDIT_CONFIG_ERROR, <String>[config.getPath()]));
+      throw new Exception(
+          _T(Messages.EDIT_CONFIG_ERROR, <String>[config.getPath()]));
     }
   }
 
@@ -45,10 +46,9 @@ class GoogleSearchPlugin extends IrcPluginBase {
             _server.sendMessage(
                 command.originalMessage.returnTo, "${title} - ${shortenedUrl}");
           });
-        }
-        else {
-          _server.sendMessage(
-                command.originalMessage.returnTo, "${command.originalMessage.sender.username}: No results.");
+        } else {
+          _server.sendMessage(command.originalMessage.returnTo,
+              "${command.originalMessage.sender.username}: No results.");
         }
       });
 

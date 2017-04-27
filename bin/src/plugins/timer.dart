@@ -8,7 +8,7 @@ class TimerPlugin extends IrcPluginBase {
   bool onTimer(IrcCommand command) {
     Duration duration = parseDuration(command.arguments.first);
     if (duration == null) return false;
-    
+
     var message =
         command.arguments.length > 1 ? command.arguments[1] : "Timer ran out!";
     if (duration.inSeconds < 1) {
