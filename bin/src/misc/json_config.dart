@@ -24,6 +24,16 @@ class JsonConfig {
     return _this;
   }
 
+  Future<Null> failOnMissingKey(List<String> keys) async {
+    if (keys.any((k) => !_config.containsKey(k))) {
+      keys.forEach((k) => set(k, ""));
+      await save();
+
+      throw new Exception(
+          _T(Messages.EDIT_CONFIG_ERROR, <String>[getPath()]));
+    }
+  }
+
   static Future<Null> _ensurePath(String fileName,
       [bool callSave = false, JsonConfig _this = null]) async {
     var dir = new Directory(CONFIG_PATH);

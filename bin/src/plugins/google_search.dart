@@ -12,17 +12,10 @@ class GoogleSearchPlugin extends IrcPluginBase {
   Future<Null> register() async {
     JsonConfig config = await JsonConfig.fromPath("google.json");
 
+    config.failOnMissingKey(["ApiToken", "CustomSearchId"]);
+
     _apiToken = config.get("ApiToken", "") as String;
     _customSearchId = config.get("CustomSearchId", "") as String;
-
-    if (_apiToken.isEmpty || _customSearchId.isEmpty) {
-      config.set("ApiToken", "");
-      config.set("CustomSearchId", "");
-      await config.save();
-
-      throw new Exception(
-          _T(Messages.EDIT_CONFIG_ERROR, <String>[config.getPath()]));
-    }
   }
 
   @Command(

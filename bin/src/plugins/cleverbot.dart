@@ -9,16 +9,8 @@ class CleverbotPlugin extends IrcPluginBase {
   @override
   Future<Null> register() async {
     _config = await JsonConfig.fromPath("cleverbot.json");
-
+    _config.failOnMissingKey(["ApiToken"]);
     _apiToken = _config.get("ApiToken", "") as String;
-
-    if (_apiToken.isEmpty) {
-      _config.set("ApiToken", "");
-      await _config.save();
-
-      throw new Exception(
-          _T(Messages.EDIT_CONFIG_ERROR, <String>[_config.getPath()]));
-    }
 
     _trigger = new RegExp("^${_server._username}\\W\\s?(.*)");
     _server.messages.listen(onMessage);

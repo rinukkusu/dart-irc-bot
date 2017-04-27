@@ -16,16 +16,8 @@ class GoogleMapsPlugin extends IrcPluginBase {
   @override
   Future<Null> register() async {
     JsonConfig config = await JsonConfig.fromPath("google.json");
-
+    config.failOnMissingKey(["ApiToken"]);
     _apiToken = config.get("ApiToken", "") as String;
-
-    if (_apiToken.isEmpty) {
-      config.set("ApiToken", "");
-      await config.save();
-
-      throw new Exception(
-          _T(Messages.EDIT_CONFIG_ERROR, <String>[config.getPath()]));
-    }
   }
 
   @Command("gmaps", const ["?address"], UserLevel.DEFAULT, const [], true)
@@ -48,8 +40,8 @@ class GoogleMapsPlugin extends IrcPluginBase {
 
           var maps_url = _getMapsUrl(address, location);
           GoogleUrlShortenerPlugin.shortenUrl(maps_url).then((shortenedUrl) {
-            _server.sendMessage(
-                command.originalMessage.returnTo, "$address - ${location.x}, ${location.y} - $shortenedUrl");
+            _server.sendMessage(command.originalMessage.returnTo,
+                "$address - ${location.x}, ${location.y} - $shortenedUrl");
           });
         }
       });
