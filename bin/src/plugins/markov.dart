@@ -93,8 +93,11 @@ class MarkovPlugin extends IrcPluginBase {
       var tokens = _tokenize(command.rawArgumentString);
       var generated = chain.chain(tokens).toList();
 
+      if (command.rawArgumentString.isNotEmpty)
+        command.rawArgumentString += " ";
+
       _server.sendMessage(
-          channel, "${command.rawArgumentString} ${generated.join(" ")}");
+          channel, "${command.rawArgumentString}${generated.join(" ")}");
     });
 
     return true;
