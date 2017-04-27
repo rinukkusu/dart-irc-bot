@@ -39,7 +39,7 @@ class GoogleMapsPlugin extends IrcPluginBase {
         var obj = JSON.decode(string) as Map<String, dynamic>;
 
         if (obj["status"] == GoogleMapsResult.OK) {
-          var results = obj["results"] as Map;
+          var results = obj["results"][0] as Map;
 
           var address = results["formatted_address"] as String;
           var location = new Point(
