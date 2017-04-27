@@ -20,7 +20,7 @@ class GoogleMapsPlugin extends IrcPluginBase {
     _apiToken = config.get("ApiToken", "") as String;
   }
 
-  @Command("gmaps", const ["?address"], UserLevel.DEFAULT, const [], true)
+  @Command("gmaps", const ["address"], UserLevel.DEFAULT, const [], true)
   bool onGoogleMaps(IrcCommand command) {
     var search = command.rawArgumentString;
 

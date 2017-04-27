@@ -1,15 +1,16 @@
 part of irc_bot;
 
 class GoogleUrlShortenerPlugin extends IrcPluginBase {
-  static String _baseUrl = "https://www.googleapis.com/urlshortener/v1/url";
-  static String _getUrl() => "${_baseUrl}?key=${_apiToken}";
-  static String _apiToken;
+  static UrlshortenerApi _api;
 
   @override
   Future<Null> register() async {
     JsonConfig config = await JsonConfig.fromPath("google.json");
     config.failOnMissingKey(["ApiToken"]);
-    _apiToken = config.get("ApiToken", "") as String;
+    var apiToken = config.get("ApiToken", "") as String;
+
+    var client = clientViaApiKey(apiToken);
+    _api = new UrlshortenerApi(client);
   }
 
   @Command("gshort", const ["url"])
@@ -23,17 +24,8 @@ class GoogleUrlShortenerPlugin extends IrcPluginBase {
   }
 
   static Future<String> shortenUrl(String url) async {
-    var client = new http.Client();
-    var request = JSON.encode({"longUrl": url});
-    var response = await client.post(_getUrl(),
-        headers: {"Content-Type": "application/json"}, body: request);
+    var shortenedUrl = await _api.url.insert(new Url.fromJson(<String, String>{"longUrl": url}));
 
-    var bytes = response.bodyBytes;
-    var json = UTF8.decode(bytes);
-    var obj = JSON.decode(json) as Map<String, String>;
-
-    var shortenedUrl = obj["id"];
-
-    return shortenedUrl;
+    return shortenedUrl.id;
   }
 }
