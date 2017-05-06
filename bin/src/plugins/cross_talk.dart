@@ -73,7 +73,7 @@ class CrossTalkPlugin extends IrcPluginBase {
     if (!_xtalks.containsKey(int.parse(command.arguments[0])))
       return false;
 
-    var id = command.arguments[0];
+    var id = int.parse(command.arguments[0]);
     var target = _xtalks[id].getPerson(command.arguments[1]);
     var message = command.arguments[2];
 
