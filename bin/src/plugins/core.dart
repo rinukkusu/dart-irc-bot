@@ -38,9 +38,15 @@ class CorePlugin extends IrcPluginBase {
         }
       }
 
-      var handler = _server._commands[commandMeta];
-      bool result = (handler(command) as InstanceMirror).reflectee as bool;
-      print(result);
+      // run command in zone to not crash
+      runZoned(() {
+        var handler = _server._commands[commandMeta];
+        bool result = (handler(command) as InstanceMirror).reflectee as bool;
+        print(result);
+      }, onError: (Exception error, StackTrace stacktrace) {
+        _server.sendMessage(
+            command.originalMessage.returnTo, "[Unhandled Error]: $error");
+      });
     }
   }
 
@@ -144,6 +150,15 @@ class CorePlugin extends IrcPluginBase {
     _server._sendRaw("QUIT :${message}");
 
     exit(0);
+
+    return true;
+  }
+
+  @Command("crash", const ["?message"], UserLevel.OWNER)
+  bool onCrash(IrcCommand command) {
+    throw command.arguments.isNotEmpty
+        ? command.rawArgumentString
+        : "crash test";
 
     return true;
   }

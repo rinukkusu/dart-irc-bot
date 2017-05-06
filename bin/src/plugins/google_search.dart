@@ -1,27 +1,20 @@
 part of irc_bot;
 
 class GoogleSearchPlugin extends IrcPluginBase {
-  static String _baseUrl = "https://www.googleapis.com/customsearch/v1";
-  String _getUrl(String search) =>
-      "${_baseUrl}?key=${_apiToken}&cx=${_customSearchId}&q=${search}";
-
-  String _apiToken;
   String _customSearchId;
+  CustomsearchApi _api;
 
   @override
   Future<Null> register() async {
     JsonConfig config = await JsonConfig.fromPath("google.json");
 
-    _apiToken = config.get("ApiToken", "") as String;
+    config.failOnMissingKey(["ApiToken", "CustomSearchId"]);
+
+    var apiToken = config.get("ApiToken", "") as String;
     _customSearchId = config.get("CustomSearchId", "") as String;
 
-    if (_apiToken.isEmpty || _customSearchId.isEmpty) {
-      config.set("ApiToken", "");
-      config.set("CustomSearchId", "");
-      await config.save();
-
-      throw new Exception(_T(Messages.EDIT_CONFIG_ERROR, <String>[config.getPath()]));
-    }
+    var client = clientViaApiKey(apiToken);
+    _api = new CustomsearchApi(client);
   }
 
   @Command(
@@ -29,28 +22,22 @@ class GoogleSearchPlugin extends IrcPluginBase {
   bool onSearch(IrcCommand command) {
     var search = command.rawArgumentString;
 
-    new http.Client()
-      ..get(_getUrl(search)).then<Null>((response) {
-        var bytes = response.bodyBytes;
-        var string = UTF8.decode(bytes);
-        var obj = JSON.decode(string) as Map<String, dynamic>;
+    _api.cse.list(search, cx: _customSearchId).then((data) {
+      if (data.items != null) {
+          var item = data.items[0];
 
-        if (obj["items"] != null) {
-          var item = obj["items"][0] as Map<String, dynamic>;
-
-          var title = item["title"] as String;
-          var url = item["link"] as String;
+          var title = item.title;
+          var url = item.link;
 
           GoogleUrlShortenerPlugin.shortenUrl(url).then<Null>((shortenedUrl) {
             _server.sendMessage(
                 command.originalMessage.returnTo, "${title} - ${shortenedUrl}");
           });
+        } else {
+          _server.sendMessage(command.originalMessage.returnTo,
+              "${command.originalMessage.sender.username}: No results.");
         }
-        else {
-          _server.sendMessage(
-                command.originalMessage.returnTo, "${command.originalMessage.sender.username}: No results.");
-        }
-      });
+    });
 
     return true;
   }

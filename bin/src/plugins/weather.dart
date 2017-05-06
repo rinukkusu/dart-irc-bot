@@ -7,7 +7,8 @@ class WeatherPlugin extends IrcPluginBase {
       "%CITY% | %TEMP%°C | %WEATHERINFO% | H: %HUMIDITY%%, P: %PRESSURE%hPa";
   String _apiToken = "";
   Map<String, String> _users = new Map();
-  String _getApiUrl(String place) => "${API_URL}&APPID=${_apiToken}&q=${Uri.encodeQueryComponent(place)}";
+  String _getApiUrl(String place) =>
+      "${API_URL}&APPID=${_apiToken}&q=${Uri.encodeQueryComponent(place)}";
 
   // d = day, n = night
   Map<String, String> _weatherIcons = {
@@ -36,10 +37,10 @@ class WeatherPlugin extends IrcPluginBase {
   @override
   Future<Null> register() async {
     _config = await JsonConfig.fromPath("weather.json");
+    _config.failOnMissingKey(["ApiToken"]);
     _apiToken = _config.get("ApiToken", "") as String;
 
-    if (_apiToken.isEmpty) {
-      _config.set("ApiToken", "");
+    if (_config.get("Users") == null) {
       _config.set("Users", _users);
       await _config.save();
 
@@ -93,8 +94,8 @@ class WeatherPlugin extends IrcPluginBase {
         _server.sendMessage(command.originalMessage.returnTo,
             "${command.originalMessage.sender.username}: ${ret}");
       } else {
-        _server.sendNotice(
-            command.originalMessage.sender.username, decoded["message"].toString());
+        _server.sendNotice(command.originalMessage.sender.username,
+            decoded["message"].toString());
       }
     }).catchError((String err) {
       _server.sendNotice(

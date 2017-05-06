@@ -9,10 +9,10 @@ class MarkovPlugin extends IrcPluginBase {
 
   @override
   Future<Null> register() async {
-    _configKey = _server._host;
+    _configKey = _server._alias;
 
     _config = await JsonConfig.fromPath("markov.json");
-    var map = _config.get(_configKey) as Map;
+    var map = _config.get(_configKey) as Map<String, List<String>>;
 
     if (map == null) {
       await _save();
@@ -35,7 +35,7 @@ class MarkovPlugin extends IrcPluginBase {
       _newMessages[channel] = new List<String>();
 
     _newMessages[channel].add(message.message);
-    
+
     _tryGetChain(channel)
         .then((chain) => chain.add(_tokenize(message.message)));
   }
@@ -93,8 +93,11 @@ class MarkovPlugin extends IrcPluginBase {
       var tokens = _tokenize(command.rawArgumentString);
       var generated = chain.chain(tokens).toList();
 
+      if (command.rawArgumentString.isNotEmpty)
+        command.rawArgumentString += " ";
+
       _server.sendMessage(
-          channel, "${command.rawArgumentString} ${generated.join(" ")}");
+          channel, "${command.rawArgumentString}${generated.join(" ")}");
     });
 
     return true;

@@ -2,22 +2,9 @@ import 'dart:async';
 import 'src/irc_bot.dart';
 
 Future<int> main(List<String> args) async {
-  var server = new IrcConnection("irc.euirc.net")
-    ..withUsername("dartisan")
-    ..withRealname("hallo i bims")
-    ..addChannel("#/prog/bot")
-    ..addOwner("rinukkusu");
+  var servers = await IrcConnection.loadFromConfig();
 
-  await server.connect();
-
-  var server2 = new IrcConnection("sub-r.de")
-    ..withUsername("dartisan")
-    ..withRealname("hallo i bims")
-    ..addChannel("#dev")
-    ..addChannel("#hollz")
-    ..addOwner("rinukkusu");
-
-  await server2.connect();
+  servers.forEach((server) async => await server.connect());
 
   return 0;
 }

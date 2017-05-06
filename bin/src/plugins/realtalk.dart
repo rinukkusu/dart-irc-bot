@@ -1,7 +1,6 @@
 part of irc_bot;
 
 class RealtalkPlugin extends IrcPluginBase {
-  
   @override
   void register() {
     _server.messages.listen(onCapslock);
@@ -12,12 +11,13 @@ class RealtalkPlugin extends IrcPluginBase {
     var upperCount = 0;
 
     for (int i = 0; i < msg.length; i++) {
-      if (msg.codeUnitAt(i) >= 65 && msg.codeUnitAt(i) <= 90)
-        upperCount++;
+      if (msg.codeUnitAt(i) >= 65 && msg.codeUnitAt(i) <= 90) upperCount++;
     }
 
     if (upperCount / msg.replaceAll(new RegExp(r"\s"), "").length > 0.8) {
       _server.sendMessage(message.returnTo, "REALTALK");
     }
+
+    return true;
   }
 }

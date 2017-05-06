@@ -10,6 +10,10 @@ import 'package:http/http.dart' as http;
 import 'package:cleverbot/cleverbot.dart';
 import 'package:xml/xml.dart' as xml;
 import 'package:markov_dart/markov_dart.dart';
+import 'package:googleapis_auth/auth_io.dart';
+import 'package:googleapis/urlshortener/v1.dart';
+import 'package:googleapis/customsearch/v1.dart';
+import 'package:googleapis/translate/v2.dart';
 
 part 'irc/enums/message_type.dart';
 part 'irc/enums/user_level.dart';
@@ -18,6 +22,7 @@ part 'irc/enums/messages.dart';
 part 'irc/entities/irc_command.dart';
 part 'irc/entities/irc_message.dart';
 part 'irc/entities/sender.dart';
+part 'irc/entities/connection_settings.dart';
 
 part 'irc/annotations/command_annotation.dart';
 
@@ -37,6 +42,8 @@ part 'plugins/random_reply.dart';
 part 'plugins/cleverbot.dart';
 part 'plugins/google_search.dart';
 part 'plugins/google_url_shortener.dart';
+part 'plugins/google_maps.dart';
+part 'plugins/google_translate.dart';
 part 'plugins/rss_reader.dart';
 part 'plugins/markov.dart';
 part 'plugins/timer.dart';

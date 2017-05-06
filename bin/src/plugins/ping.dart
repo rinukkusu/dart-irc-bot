@@ -21,10 +21,11 @@ class PingPlugin extends IrcPluginBase {
       _pingMap.putIfAbsent(timestamp, () => message.originalMessage);
 
       _server._sendRaw("PING :${timestamp}");
-    }
-    else {
+    } else {
       var secondsUntil = PING_TIMEOUT - diff.inSeconds;
-      _server.sendNotice(message.originalMessage.sender.username, _T(Messages.PING_NOT_ALLOWED, <String>[secondsUntil.toString()]));
+      
+      _server.sendNotice(message.originalMessage.sender.username,
+          _T(Messages.PING_NOT_ALLOWED, <String>[secondsUntil.toString()]));
     }
 
     return true;
