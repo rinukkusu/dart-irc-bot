@@ -35,7 +35,7 @@ class CrossTalk {
 }
 
 class CrossTalkPlugin extends IrcPluginBase {
-  Map<int, CrossTalk> _xtalks = new Map();
+  static Map<int, CrossTalk> _xtalks = new Map();
 
   @override
   void register() {
