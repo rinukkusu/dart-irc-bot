@@ -26,8 +26,9 @@ class CrossTalk {
   Person person1;
   Person person2;
   String registeredChannel;
+  IrcConnection server;
 
-  CrossTalk(this.person1, this.person2, this.registeredChannel);
+  CrossTalk(this.person1, this.person2, this.registeredChannel, this.server);
 
   bool isUserPart(String name) => person1.name == name || person2.name == name;
   Person getPerson(String name) => person1.name == name ? person1 : person2;
@@ -64,7 +65,7 @@ class CrossTalkPlugin extends IrcPluginBase {
     var p1 = new Person.fromString(command.arguments[0], _server);
     var p2 = new Person.fromString(command.arguments[1], _server);
 
-    _xtalks[id] = new CrossTalk(p1, p2, command.originalMessage.returnTo);
+    _xtalks[id] = new CrossTalk(p1, p2, command.originalMessage.returnTo, _server);
 
     _server.sendMessage(command.originalMessage.returnTo, _T(Messages.XTALK_CREATED, <String>[id.toString(), p1.name, p2.name]));
 
