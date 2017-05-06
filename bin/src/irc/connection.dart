@@ -132,7 +132,7 @@ class IrcConnection {
         addCommand(
             methodMirror.metadata.first.reflectee as Command,
             (IrcCommand command) =>
-                pluginReflection.invoke(methodMirror.simpleName, [command]));
+                pluginReflection.invoke(methodMirror.simpleName, <IrcCommand>[command]));
       }
     });
   }

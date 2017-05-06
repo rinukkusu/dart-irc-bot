@@ -20,7 +20,7 @@ class GoogleSearchPlugin extends IrcPluginBase {
       config.set("CustomSearchId", "");
       await config.save();
 
-      throw new Exception(_T(Messages.EDIT_CONFIG_ERROR, [config.getPath()]));
+      throw new Exception(_T(Messages.EDIT_CONFIG_ERROR, <String>[config.getPath()]));
     }
   }
 

@@ -44,6 +44,6 @@ String getReadableDuration(Duration difference) {
   }
 }
 
-String buildAgoString(String unit, var value) {
+String buildAgoString(String unit, dynamic value) {
   return value.toString() + " " + unit + (value != 1 ? "s" : "");
 }

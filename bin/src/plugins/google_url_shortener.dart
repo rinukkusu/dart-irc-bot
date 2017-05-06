@@ -15,7 +15,7 @@ class GoogleUrlShortenerPlugin extends IrcPluginBase {
       config.set("ApiToken", "");
       await config.save();
 
-      throw new Exception(_T(Messages.EDIT_CONFIG_ERROR, [config.getPath()]));
+      throw new Exception(_T(Messages.EDIT_CONFIG_ERROR, <String>[config.getPath()]));
     }
   }
 

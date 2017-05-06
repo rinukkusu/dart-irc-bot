@@ -24,7 +24,7 @@ class PingPlugin extends IrcPluginBase {
     }
     else {
       var secondsUntil = PING_TIMEOUT - diff.inSeconds;
-      _server.sendNotice(message.originalMessage.sender.username, _T(Messages.PING_NOT_ALLOWED, [secondsUntil]));
+      _server.sendNotice(message.originalMessage.sender.username, _T(Messages.PING_NOT_ALLOWED, <String>[secondsUntil.toString()]));
     }
 
     return true;

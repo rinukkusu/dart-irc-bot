@@ -43,7 +43,7 @@ class WeatherPlugin extends IrcPluginBase {
       _config.set("Users", _users);
       await _config.save();
 
-      throw new Exception(_T(Messages.EDIT_CONFIG_ERROR, [_config.getPath()]));
+      throw new Exception(_T(Messages.EDIT_CONFIG_ERROR, <String>[_config.getPath()]));
     }
 
     _users = _config.get("Users") as Map<String, String>;
@@ -114,7 +114,7 @@ class WeatherPlugin extends IrcPluginBase {
     _config.save();
 
     _server.sendMessage(command.originalMessage.returnTo,
-        "${sender.username}: ${_T(Messages.WEATHER_LOCATION_SET, [location])}");
+        "${sender.username}: ${_T(Messages.WEATHER_LOCATION_SET, <String>[location])}");
 
     return true;
   }
