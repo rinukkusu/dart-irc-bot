@@ -162,4 +162,11 @@ class CorePlugin extends IrcPluginBase {
 
     return true;
   }
+
+  @Command("serverlist")
+  bool onServerlist(IrcCommand command) {
+    _server.sendMessage(command.originalMessage.returnTo, 
+        IrcConnection._connections.keys.toList().toString());
+    return true;
+  }
 }

@@ -1,14 +1,34 @@
 part of irc_bot;
 
+class Person {
+  String name;
+  IrcConnection server;
+
+  Person(this.name, this.server);
+
+  Person.fromString(String person, IrcConnection defaultServer) {
+    if (person.contains("@")) {
+      var parts = person.split("@");
+      name = parts[0];
+      server = IrcConnection._connections[parts[1]];
+    }
+    else {
+      name = person;
+      server = defaultServer;
+    }
+  }
+}
+
 class CrossTalk {
-  String person1;
-  String person2;
+  Person person1;
+  Person person2;
   String registeredChannel;
 
   CrossTalk(this.person1, this.person2, this.registeredChannel);
 
   bool isUserPart(String name) => person1 == name || person2 == name;
-  String getOtherPerson(String sender) => person1 == sender ? person2 : person1;
+  Person getPerson(String name) => person1.name == name ? person1 : person2;
+  Person getOtherPerson(String sender) => person1.name == sender ? person2 : person1;
 }
 
 class CrossTalkPlugin extends IrcPluginBase {
@@ -31,16 +51,19 @@ class CrossTalkPlugin extends IrcPluginBase {
     var sender = msg.sender.username;
     var target = xtalk.getOtherPerson(msg.sender.username);
 
-    _server.sendMessage(target, msg.message);
+    target.server.sendMessage(target.name, msg.message);
     _server.sendMessage(xtalk.registeredChannel, "<$sender> ${msg.message}");
   }
 
   @Command("xtalk", const ["person1", "person2"])
   bool onStartCrossTalk (IrcCommand command) {
     var id = _xtalks.length;
-    _xtalks[id] = new CrossTalk(command.arguments[0], command.arguments[1], command.originalMessage.returnTo);
+    var p1 = new Person.fromString(command.arguments[0], _server);
+    var p2 = new Person.fromString(command.arguments[1], _server);
 
-    _server.sendMessage(command.originalMessage.returnTo, _T(Messages.XTALK_CREATED, <String>[id.toString(), _xtalks[id].person1, _xtalks[id].person2]));
+    _xtalks[id] = new CrossTalk(p1, p2, command.originalMessage.returnTo);
+
+    _server.sendMessage(command.originalMessage.returnTo, _T(Messages.XTALK_CREATED, <String>[id.toString(), p1.name, p2.name]));
 
     return true;
   }
@@ -51,10 +74,24 @@ class CrossTalkPlugin extends IrcPluginBase {
       return false;
 
     var id = command.arguments[0];
-    var target = command.arguments[1];
+    var target = _xtalks[id].getPerson(command.arguments[1]);
     var message = command.arguments[2];
 
-    _server.sendMessage(target, message);
+    target.server.sendMessage(target.name, message);
+
+    return true;
+  }
+
+  @Command("xtalkdel", const ["id"]) 
+  bool onDelCrossTalk(IrcCommand command) {
+    var id = int.parse(command.arguments[0]);
+
+    if (!_xtalks.containsKey(id))
+      return false;
+
+    _xtalks.remove(id);
+
+    _server.sendMessage(command.originalMessage.returnTo, _T(Messages.XTALK_DELETED, <String>[id.toString()]));
 
     return true;
   }

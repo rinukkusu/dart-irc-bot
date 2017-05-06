@@ -30,6 +30,8 @@ class IrcConnection {
   Map<Command, Function> _commands = new Map<Command, Function>();
   List<String> _channels = new List<String>();
 
+  static Map<String, IrcConnection> _connections = new Map();
+
   IrcConnection(String alias, String host, [int port = 6667]) {
     rawMessages = _rawController.stream.asBroadcastStream();
     pongs = _pongController.stream.asBroadcastStream();
@@ -68,6 +70,8 @@ class IrcConnection {
 
         settings.channels.forEach((channel) => connection.addChannel(channel));
         settings.owners.forEach((owner) => connection.addOwner(owner));
+
+        _connections[alias] = connection;
 
         connections.add(connection);
       });

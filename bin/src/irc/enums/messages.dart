@@ -33,6 +33,7 @@ class Messages {
   static const String RSS_FEED_ERROR = "[ERROR/{1}] {2}";
 
   static const String XTALK_CREATED = "Started XTalk with ID {1} for {2} and {3}.";
+  static const String XTALK_DELETED = "Deleted XTalk with ID {1}.";
 }
 
 String _T(String template, [List<dynamic> params = null]) {
