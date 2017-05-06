@@ -26,7 +26,7 @@ class CrossTalk {
 
   CrossTalk(this.person1, this.person2, this.registeredChannel);
 
-  bool isUserPart(String name) => person1 == name || person2 == name;
+  bool isUserPart(String name) => person1.name == name || person2.name == name;
   Person getPerson(String name) => person1.name == name ? person1 : person2;
   Person getOtherPerson(String sender) => person1.name == sender ? person2 : person1;
 }
