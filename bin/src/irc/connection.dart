@@ -208,7 +208,7 @@ class IrcConnection {
               _userContainer.getLevel(ircMessage.sender.username);
 
           runZoned(() => _handleMessage(ircMessage),
-              onError: (Exception error, StackTrace stacktrace) {
+              onError: (dynamic error, StackTrace stacktrace) {
             sendMessage(ircMessage.returnTo, "[Unhandled]: $error");
           });
         }
@@ -239,7 +239,7 @@ class IrcConnection {
       case MessageType.PRIVMSG:
         _messageController.add(message);
         if (_isCommand(message))
-          _commandController.add(new IrcCommand.fromIrcMessage(message));
+          _commandController.add(new IrcCommand.fromIrcMessage(message, _commandChar));
         break;
 
       case MessageType.INVITE:

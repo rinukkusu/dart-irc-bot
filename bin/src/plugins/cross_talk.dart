@@ -3,6 +3,7 @@ part of irc_bot;
 class Person {
   String name;
   IrcConnection server;
+  String botName;
 
   Person(this.name, this.server);
 
@@ -16,6 +17,8 @@ class Person {
       name = person;
       server = defaultServer;
     }
+
+    botName = server._username;
   }
 }
 
