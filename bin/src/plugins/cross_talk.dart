@@ -56,7 +56,7 @@ class CrossTalkPlugin extends IrcPluginBase {
     var target = xtalk.getOtherPerson(msg.sender.username);
 
     target.server.sendMessage(target.name, msg.message);
-    _server.sendMessage(xtalk.registeredChannel, "<$sender> ${msg.message}");
+    xtalk.server.sendMessage(xtalk.registeredChannel, "<$sender> ${msg.message}");
   }
 
   @Command("xtalk", const ["person1", "person2"])
