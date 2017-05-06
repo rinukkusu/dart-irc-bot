@@ -40,14 +40,14 @@ class CrossTalkPlugin extends IrcPluginBase {
     var id = _xtalks.length;
     _xtalks[id] = new CrossTalk(command.arguments[0], command.arguments[1], command.originalMessage.returnTo);
 
-    _server.sendMessage(command.originalMessage.returnTo, _T(Messages.XTALK_CREATED, <String>[_xtalks[id].person1, _xtalks[id].person2]));
+    _server.sendMessage(command.originalMessage.returnTo, _T(Messages.XTALK_CREATED, <String>[id.toString(), _xtalks[id].person1, _xtalks[id].person2]));
 
     return true;
   }
 
   @Command("xtalksay", const ["id", "person", "text"]) 
   bool onSayCrossTalk(IrcCommand command) {
-    if (!_xtalks.containsKey(command.arguments[0]))
+    if (!_xtalks.containsKey(int.parse(command.arguments[0])))
       return false;
 
     var id = command.arguments[0];
