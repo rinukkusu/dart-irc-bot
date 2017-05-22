@@ -15,6 +15,7 @@ class FortunePlugin extends IrcPluginBase {
     var username = command.originalMessage.sender.username;
 
     if (eglibleForFortune(username)) {
+      _fortuneMap[username] = new DateTime.now();
       var fortune = _fortune.next();
       _server.sendMessage(command.originalMessage.returnTo, fortune.toString());
     } else {
