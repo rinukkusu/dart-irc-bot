@@ -14,6 +14,7 @@ import 'package:googleapis_auth/auth_io.dart';
 import 'package:googleapis/urlshortener/v1.dart';
 import 'package:googleapis/customsearch/v1.dart';
 import 'package:googleapis/translate/v2.dart';
+import 'package:fortune/fortune_io.dart';
 
 part 'irc/enums/message_type.dart';
 part 'irc/enums/user_level.dart';
@@ -49,6 +50,7 @@ part 'plugins/markov.dart';
 part 'plugins/timer.dart';
 part 'plugins/realtalk.dart';
 part 'plugins/cross_talk.dart';
+part 'plugins/fortune.dart';
 
 part 'plugins/models/rss_reader/feed_info.dart';
 part 'plugins/models/rss_reader/parser.dart';
