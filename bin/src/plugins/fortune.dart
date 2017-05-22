@@ -9,9 +9,9 @@ class FortunePlugin extends IrcPluginBase {
   }
 
   @Command("fortune")
-  FutureOr<bool> onFortune(IrcCommand command) async {
-    var fortune = await _fortune.next();
-    _server.sendMessage(command.originalMessage.returnTo, fortune);
+  bool onFortune(IrcCommand command) {
+    var fortune = _fortune.next();
+    _server.sendMessage(command.originalMessage.returnTo, fortune.toString());
 
     return true;
   }
