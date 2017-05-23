@@ -19,6 +19,7 @@ import 'package:fortune/fortune_io.dart';
 part 'irc/enums/message_type.dart';
 part 'irc/enums/user_level.dart';
 part 'irc/enums/messages.dart';
+part 'irc/enums/colors.dart';
 
 part 'irc/entities/irc_command.dart';
 part 'irc/entities/irc_message.dart';
