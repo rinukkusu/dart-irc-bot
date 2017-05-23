@@ -60,7 +60,8 @@ class SchizoPlugin extends IrcPluginBase {
   }
 
   SchizoConversation getConversation(String channel) {
-    return _conversations.firstWhere((c) => c.channel == channel, orElse: null);
+    return _conversations.firstWhere((c) => c.channel == channel,
+        orElse: () => null);
   }
 
   @Command(
