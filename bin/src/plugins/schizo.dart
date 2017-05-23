@@ -7,7 +7,7 @@ class SchizoConversation {
   SchizoBot bot_2;
   bool _stopTalking = false;
   Random _rng = new Random();
-  int get _randomTiming => _rng.nextInt(15) + 5;
+  int get _randomTiming => _rng.nextInt(5) + 5;
 
   SchizoConversation(String apiToken, this.server, this.channel,
       {String name_1: "A", String name_2: "B"}) {
@@ -16,21 +16,21 @@ class SchizoConversation {
   }
 
   void startTalk([String message = ""]) {
-    talk(bot_1, bot_2, message);
+    _talk(bot_1, bot_2, message);
   }
 
   void stopTalk() {
     _stopTalking = true;
   }
 
-  void talk(SchizoBot sender, SchizoBot target, String message) {
+  void _talk(SchizoBot sender, SchizoBot target, String message) {
     if (_stopTalking) return;
 
     server.sendMessage(channel, "${sender.name}: $message");
 
     target.think(message).then((thought) {
       new Timer(new Duration(seconds: _randomTiming),
-          () => talk(target, sender, thought));
+          () => _talk(target, sender, thought));
     });
   }
 }
