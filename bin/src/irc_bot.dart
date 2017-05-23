@@ -51,6 +51,7 @@ part 'plugins/timer.dart';
 part 'plugins/realtalk.dart';
 part 'plugins/cross_talk.dart';
 part 'plugins/fortune.dart';
+part 'plugins/schizo.dart';
 
 part 'plugins/models/rss_reader/feed_info.dart';
 part 'plugins/models/rss_reader/parser.dart';
