@@ -28,10 +28,9 @@ class SchizoConversation {
 
     server.sendMessage(channel, "${sender.name}: $message");
 
-    target.think(message).then((thought) {
-      new Timer(new Duration(seconds: _randomTiming),
-          () => _talk(target, sender, thought));
-    });
+    target.think(message).then((thought) => new Timer(
+        new Duration(seconds: _randomTiming),
+        () => _talk(target, sender, thought)));
   }
 }
 
@@ -73,6 +72,7 @@ class SchizoPlugin extends IrcPluginBase {
     if (conversation != null) return false; // TODO: send error
 
     conversation = new SchizoConversation(_apiToken, _server, channel);
+    _conversations.add(conversation);
     conversation.startTalk(command.rawArgumentString);
 
     return true;
