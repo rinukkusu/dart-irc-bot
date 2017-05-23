@@ -86,6 +86,7 @@ class SchizoPlugin extends IrcPluginBase {
     if (conversation == null) return false; // TODO: send error
 
     conversation.stopTalk();
+    _conversations.remove(conversation);
 
     return true;
   }
