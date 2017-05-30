@@ -1,35 +1,23 @@
 part of irc_bot;
 
 class WeatherPlugin extends IrcPluginBase {
-  static const String API_URL =
-      "http://api.openweathermap.org/data/2.5/weather?units=metric";
   static const String RETURN_STRING =
       "%CITY% | %TEMP%°C | %WEATHERINFO% | H: %HUMIDITY%%, P: %PRESSURE%hPa";
   String _apiToken = "";
   Map<String, String> _users = new Map();
-  String _getApiUrl(String place) =>
-      "${API_URL}&APPID=${_apiToken}&q=${Uri.encodeQueryComponent(place)}";
+  DarkSkyWeather _weatherApi;
 
   // d = day, n = night
   Map<String, String> _weatherIcons = {
-    "01d": "☀",
-    "01n": "🌚",
-    "02d": "⛅",
-    "02n": "⛅",
-    "03d": "☁",
-    "03n": "☁",
-    "04d": "☁",
-    "04n": "☁",
-    "09d": "🌦",
-    "09n": "🌦",
-    "10d": "🌧",
-    "10n": "🌧",
-    "11d": "⛈",
-    "11n": "⛈",
-    "13d": "🌨",
-    "13n": "🌨",
-    "50d": "🌫",
-    "50n": "🌫"
+    "clear-day": "☀",
+    "clear-night": "🌚",
+    "partly-cloudy-day": "⛅",
+    "partly-cloudy-night": "⛅",
+    "cloudy": "☁",
+    "rain": "🌧",
+    "thunderstorm": "⛈",
+    "snow": "🌨",
+    "fog": "🌫",
   };
 
   JsonConfig _config;
@@ -44,14 +32,17 @@ class WeatherPlugin extends IrcPluginBase {
       _config.set("Users", _users);
       await _config.save();
 
-      throw new Exception(_T(Messages.EDIT_CONFIG_ERROR, <String>[_config.getPath()]));
+      throw new Exception(
+          _T(Messages.EDIT_CONFIG_ERROR, <String>[_config.getPath()]));
     }
 
+    _weatherApi = new DarkSkyWeather(_apiToken,
+        language: Language.German, units: Units.SI);
     _users = _config.get("Users") as Map<String, String>;
   }
 
   @Command("weather", const ["?location"], UserLevel.DEFAULT, const ["w"], true)
-  bool onWeather(IrcCommand command) {
+  Future<bool> onWeather(IrcCommand command) async {
     var sender = command.originalMessage.sender;
     var location = command.rawArgumentString;
 
@@ -63,44 +54,23 @@ class WeatherPlugin extends IrcPluginBase {
       }
     }
 
-    var url = _getApiUrl(location);
+    var place = await GoogleMapsPlugin.getPlace(location);
+    var weather = await _weatherApi.getForecast(place.lat, place.lon);
 
-    new http.Client().get(url).then<Null>((response) {
-      String body = UTF8.decode(response.bodyBytes);
-      var decoded = JSON.decode(body) as Map<String, dynamic>;
+    if (weather != null) {
+      var ret = RETURN_STRING
+          .replaceAll("%CITY%", location)
+          .replaceAll("%TEMP%", weather.currently.temperature.toString())
+          .replaceAll("%HUMIDITY%", weather.currently.humidity.toString())
+          .replaceAll("%PRESSURE%", weather.currently.pressure.toString());
 
-      if (decoded["cod"] == 200) {
-        var ret = RETURN_STRING
-            .replaceAll("%CITY%", decoded["name"].toString())
-            .replaceAll("%TEMP%", decoded["main"]["temp"].toString())
-            .replaceAll("%HUMIDITY%", decoded["main"]["humidity"].toString())
-            .replaceAll("%PRESSURE%", decoded["main"]["pressure"].toString());
+      String weatherInfo = weather.currently.summary;
+      String weatherIcon = weather.currently.icon;
 
-        String weatherInfo = "";
-        String weatherIcon = "";
-
-        (decoded["weather"] as List<Map>).forEach((info) {
-          if (weatherInfo.isNotEmpty) weatherInfo += ", ";
-          weatherInfo += info["description"].toString();
-
-          if (weatherIcon.isEmpty) {
-            var icon = _weatherIcons[info["icon"]];
-            weatherIcon = icon + " ";
-          }
-        });
-        weatherInfo.trim();
-
-        ret = ret.replaceAll("%WEATHERINFO%", "${weatherIcon}${weatherInfo}");
-        _server.sendMessage(command.originalMessage.returnTo,
-            "${command.originalMessage.sender.username}: ${ret}");
-      } else {
-        _server.sendNotice(command.originalMessage.sender.username,
-            decoded["message"].toString());
-      }
-    }).catchError((String err) {
-      _server.sendNotice(
-          command.originalMessage.sender.username, err.toString());
-    });
+      ret = ret.replaceAll("%WEATHERINFO%", "$weatherIcon $weatherInfo");
+      _server.sendMessage(command.originalMessage.returnTo,
+          "${command.originalMessage.sender.username}: ${ret}");
+    }
 
     return true;
   }

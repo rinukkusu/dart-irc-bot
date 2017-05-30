@@ -15,6 +15,7 @@ import 'package:googleapis/urlshortener/v1.dart';
 import 'package:googleapis/customsearch/v1.dart';
 import 'package:googleapis/translate/v2.dart';
 import 'package:fortune/fortune_io.dart';
+import 'package:darksky_weather/darksky_weather_io.dart';
 
 part 'irc/enums/message_type.dart';
 part 'irc/enums/user_level.dart';

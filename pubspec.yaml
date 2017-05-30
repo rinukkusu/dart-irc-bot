@@ -9,3 +9,4 @@ dependencies:
   googleapis: 0.39.0
   googleapis_auth: any
   fortune: any
+  darksky_weather: 0.1.1
