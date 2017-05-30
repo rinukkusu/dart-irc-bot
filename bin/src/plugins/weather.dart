@@ -42,7 +42,7 @@ class WeatherPlugin extends IrcPluginBase {
   }
 
   @Command("weather", const ["?location"], UserLevel.DEFAULT, const ["w"], true)
-  Future<bool> onWeather(IrcCommand command) async {
+  bool onWeather(IrcCommand command) {
     var sender = command.originalMessage.sender;
     var location = command.rawArgumentString;
 
@@ -54,23 +54,24 @@ class WeatherPlugin extends IrcPluginBase {
       }
     }
 
-    var place = await GoogleMapsPlugin.getPlace(location);
-    var weather = await _weatherApi.getForecast(place.lat, place.lon);
+    GoogleMapsPlugin.getPlace(location).then((place) {
+      _weatherApi.getForecast(place.lat, place.lon).then((weather) {
+        if (weather != null) {
+          var ret = RETURN_STRING
+              .replaceAll("%CITY%", location)
+              .replaceAll("%TEMP%", weather.currently.temperature.toString())
+              .replaceAll("%HUMIDITY%", (weather.currently.humidity*100).toString())
+              .replaceAll("%PRESSURE%", weather.currently.pressure.toString());
 
-    if (weather != null) {
-      var ret = RETURN_STRING
-          .replaceAll("%CITY%", location)
-          .replaceAll("%TEMP%", weather.currently.temperature.toString())
-          .replaceAll("%HUMIDITY%", weather.currently.humidity.toString())
-          .replaceAll("%PRESSURE%", weather.currently.pressure.toString());
+          String weatherInfo = weather.currently.summary;
+          String weatherIcon = _weatherIcons[weather.currently.icon];
 
-      String weatherInfo = weather.currently.summary;
-      String weatherIcon = weather.currently.icon;
-
-      ret = ret.replaceAll("%WEATHERINFO%", "$weatherIcon $weatherInfo");
-      _server.sendMessage(command.originalMessage.returnTo,
-          "${command.originalMessage.sender.username}: ${ret}");
-    }
+          ret = ret.replaceAll("%WEATHERINFO%", "$weatherIcon $weatherInfo");
+          _server.sendMessage(command.originalMessage.returnTo,
+              "${command.originalMessage.sender.username}: ${ret}");
+        }
+      });
+    });
 
     return true;
   }
