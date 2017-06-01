@@ -37,7 +37,7 @@ class WeatherPlugin extends IrcPluginBase {
     }
 
     _weatherApi = new DarkSkyWeather(_apiToken,
-        language: Language.German, units: Units.SI);
+        language: Language.English, units: Units.SI);
     _users = _config.get("Users") as Map<String, String>;
   }
 
