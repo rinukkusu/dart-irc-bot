@@ -6,7 +6,7 @@ dependencies:
   cleverbot: 0.1.0
   xml: any
   markov_dart: 0.1.0
-  googleapis: 0.39.0
+  googleapis: 0.40.0
   googleapis_auth: any
   fortune: any
   darksky_weather: 0.1.1
