@@ -35,7 +35,7 @@ class GoogleMapsPlugin extends IrcPluginBase {
         var maps_url = _getMapsUrl(place.address, place.lat, place.lon);
         GoogleUrlShortenerPlugin.shortenUrl(maps_url).then((shortenedUrl) {
           _server.sendMessage(command.originalMessage.returnTo,
-              "$place.address - ${place.lat}, ${place.lon} - $shortenedUrl");
+              "${place.address} - ${place.lat}, ${place.lon} - $shortenedUrl");
         });
       }
     });
