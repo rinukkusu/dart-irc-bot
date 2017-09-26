@@ -11,7 +11,7 @@ class RealtalkPlugin extends IrcPluginBase {
     var upperCount = 0;
 
     for (int i = 0; i < msg.length; i++) {
-      if (msg[i].toUpperCase() == msg[i]) upperCount++;
+      if (msg[i].toUpperCase() == msg[i] && msg[i].toLowerCase() != msg[i]) upperCount++;
     }
 
     if (upperCount / msg.replaceAll(new RegExp(r"\s"), "").length > 0.8) {
