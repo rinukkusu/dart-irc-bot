@@ -71,8 +71,15 @@ class CorePlugin extends IrcPluginBase {
     } else {
       var queriedCommand = command.arguments.first;
       var commandMeta = _server._commands.keys.firstWhere(
-          (x) => x.name == queriedCommand || x.alias.contains(queriedCommand));
+          (x) => x.name == queriedCommand || x.alias.contains(queriedCommand), orElse: () => null);
 
+      if (commandMeta == null) {
+        _server.sendMessage(
+          command.originalMessage.returnTo,
+          "${command.originalMessage.sender.username}: ${_T(Messages.COMMAND_NO_EXISTS, <String>[queriedCommand])}");
+        return true;
+      }
+      
       var argumentString = "";
       commandMeta.arguments.forEach((arg) {
         argumentString +=
