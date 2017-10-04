@@ -3,6 +3,7 @@ part of irc_bot;
 class Messages {
   static const String COMMAND_NO_PERMISSION = "Insufficient permissions.";
   static const String COMMAND_WRONG_USAGE = "Usage: {1} {2}";
+  static const String COMMAND_NO_EXISTS = "Command does not exist: {1}";
 
   static const String PING_NOT_ALLOWED =
       "I'm not allowed to send PINGs for like {1} seconds.";
