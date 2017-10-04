@@ -37,6 +37,7 @@ class CrossTalk {
 
 class CrossTalkPlugin extends IrcPluginBase {
   static Map<int, CrossTalk> _xtalks = new Map();
+  static int _xtalkId = 0;
 
   @override
   void register() {
@@ -61,7 +62,7 @@ class CrossTalkPlugin extends IrcPluginBase {
 
   @Command("xtalk", const ["person1", "person2"])
   bool onStartCrossTalk (IrcCommand command) {
-    var id = _xtalks.length;
+    var id = _xtalkId++;
     var p1 = new Person.fromString(command.arguments[0], _server);
     var p2 = new Person.fromString(command.arguments[1], _server);
 
