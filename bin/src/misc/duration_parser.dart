@@ -21,29 +21,29 @@ Duration parseDuration(String durationString) {
 
 String getReadableDuration(Duration difference) {
   if (difference.inDays >= 365) {
-    var val = (difference.inDays / 365).truncateToDouble();
+    var val = difference.inDays / 365;
     return buildAgoString("year", val);
   } else if (difference.inDays >= 30) {
-    var val = (difference.inDays / 30).truncateToDouble();
+    var val = difference.inDays / 30;
     return buildAgoString("month", val);
   } else if (difference.inDays >= 7) {
-    var val = (difference.inDays / 7).truncateToDouble();
+    var val = difference.inDays / 7;
     return buildAgoString("week", val);
   } else if (difference.inDays >= 1) {
-    var val = difference.inDays.truncateToDouble();
+    var val = difference.inHours / 24;
     return buildAgoString("day", val);
   } else if (difference.inHours >= 1) {
-    var val = difference.inHours.truncateToDouble();
+    var val = difference.inMinutes / 60;
     return buildAgoString("hour", val);
   } else if (difference.inMinutes >= 1) {
-    var val = difference.inMinutes.truncateToDouble();
+    var val = difference.inSeconds / 60;
     return buildAgoString("minute", val);
   } else {
-    var val = difference.inSeconds.truncateToDouble();
+    var val = difference.inSeconds;
     return buildAgoString("second", val);
   }
 }
 
-String buildAgoString(String unit, dynamic value) {
-  return value.toString() + " " + unit + (value != 1 ? "s" : "");
+String buildAgoString(String unit, num value) {
+  return value.toStringAsFixed(1) + " " + unit + (value != 1 ? "s" : "");
 }
