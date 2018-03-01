@@ -58,7 +58,7 @@ class WeatherPlugin extends IrcPluginBase {
       _weatherApi.getForecast(place.lat, place.lon).then((weather) {
         if (weather != null) {
           var ret = RETURN_STRING
-              .replaceAll("%CITY%", location)
+              .replaceAll("%CITY%", place.address)
               .replaceAll("%TEMP%", weather.currently.temperature.toString())
               .replaceAll("%HUMIDITY%", (weather.currently.humidity*100).toString())
               .replaceAll("%PRESSURE%", weather.currently.pressure.toString());
