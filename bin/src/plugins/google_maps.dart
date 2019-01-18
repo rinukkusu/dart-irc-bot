@@ -46,8 +46,8 @@ class GoogleMapsPlugin extends IrcPluginBase {
   static Future<GoogleMapsResult> getPlace(String search) async {
     var response = await new http.Client().get(_getUrl(search));
     var bytes = response.bodyBytes;
-    var string = UTF8.decode(bytes);
-    var obj = JSON.decode(string) as Map<String, dynamic>;
+    var string = utf8.decode(bytes);
+    var obj = json.decode(string) as Map<String, dynamic>;
 
     if (obj["status"] == GoogleMapsResult.OK) {
       var results = obj["results"][0] as Map;

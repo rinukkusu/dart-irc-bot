@@ -19,7 +19,7 @@ class JsonConfig {
 
     await _ensurePath(fileName, true, _this);
     var contents = await new File(_getPath(fileName)).readAsString();
-    _this._config = JSON.decode(contents) as Map<String, dynamic>;
+    _this._config = json.decode(contents) as Map<String, dynamic>;
 
     return _this;
   }

@@ -177,7 +177,7 @@ class IrcConnection {
   }
 
   void _sendRaw(String message) {
-    _socket.add(UTF8.encode("${message}\r\n"));
+    _socket.add(utf8.encode("${message}\r\n"));
     print("<< ${message}");
   }
 
@@ -195,7 +195,7 @@ class IrcConnection {
   }
 
   void _onData(List<int> data) {
-    String messageRaw = UTF8.decode(data, allowMalformed: true);
+    String messageRaw = utf8.decode(data, allowMalformed: true);
     var messages = messageRaw.replaceAll("\r", "").split("\n");
 
     messages.forEach((message) {

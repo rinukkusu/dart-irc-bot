@@ -20,7 +20,7 @@ enum ColorEnum {
 }
 
 class IrcColors {
-  static String _decode(String b) => UTF8.decode([int.parse(b)]);
+  static String _decode(String b) => utf8.decode([int.parse(b)]);
   static String _cc(ColorEnum val) => "${COLOR}${_c(val)}";
   static String _c(ColorEnum val) => val.index.toString().padLeft(2, "0");
 
