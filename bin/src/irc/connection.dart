@@ -54,13 +54,13 @@ class IrcConnection {
 
   static Future<List<IrcConnection>> loadFromConfig() async {
     var config = await JsonConfig.fromPath("main.json");
-    var servers = config.get("servers") as Map<String, Map<String, dynamic>>;
+    var servers = config.get("servers") as Map<String, dynamic>;
 
     if (servers != null) {
       List<IrcConnection> connections = new List<IrcConnection>();
 
       servers.forEach((alias, settingsMap) {
-        var settings = new ConnectionSettings.fromMap(settingsMap);
+        var settings = new ConnectionSettings.fromMap(settingsMap as Map<String, dynamic>);
 
         var connection = new IrcConnection(alias, settings.host, settings.port)
           ..withCommandChar(settings.commandChar)
