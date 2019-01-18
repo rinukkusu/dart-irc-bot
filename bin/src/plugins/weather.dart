@@ -38,7 +38,7 @@ class WeatherPlugin extends IrcPluginBase {
 
     _weatherApi = new DarkSkyWeather(_apiToken,
         language: Language.English, units: Units.SI);
-    _users = _config.get("Users") as Map<String, String>;
+    _users = (_config.get("Users") as Map<String, dynamic>).cast<String, String>();
   }
 
   @Command("weather", const ["?location"], UserLevel.DEFAULT, const ["w"], true)
