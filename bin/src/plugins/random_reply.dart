@@ -11,7 +11,7 @@ class RandomReplyPlugin extends IrcPluginBase {
   @override
   Future<Null> register() async {
     _config = await JsonConfig.fromPath("random_answer.json");
-    _replies = _config.get("Replies", <String>[]) as List<String>;
+    _replies = (_config.get("Replies", <String>[]) as List<dynamic>).cast<String>();
 
     if (_replies.isEmpty) {
       _replies.add("weil das halt so ist ...");
