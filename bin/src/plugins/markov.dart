@@ -12,12 +12,12 @@ class MarkovPlugin extends IrcPluginBase {
     _configKey = _server._alias;
 
     _config = await JsonConfig.fromPath("markov.json");
-    var map = (_config.get(_configKey) as Map<String, dynamic>).cast<String, List<String>>();
+    var map = _config.get(_configKey) as Map<String, dynamic>;
 
     if (map == null) {
       await _save();
     } else {
-      _messageMap = map;
+      _messageMap = map.cast<String, List<String>>();
     }
 
     _regenerateChains();
@@ -56,8 +56,13 @@ class MarkovPlugin extends IrcPluginBase {
   }
 
   Future<Null> _save() async {
-    _config.set(_configKey, _messageMap);
-    await _config.save();
+    try {
+      _config.set(_configKey, _messageMap);
+      await _config.save();
+    }
+    catch(err) {
+      print(err);
+    }
   }
 
   void _regenerateChains() {
