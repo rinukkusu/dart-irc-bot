@@ -19,8 +19,8 @@ class ConnectionSettings {
     realname = map["realname"] as String ?? username;
     password = map["password"] as String;
     commandChar = map["commandChar"] as String ?? commandChar;
-    channels = (map["channels"] as List<String>).toList();
-    owners = (map["owners"] as List<String>).toList();
+    channels = (map["channels"] as List<dynamic>).cast<String>().toList();
+    owners = (map["owners"] as List<dynamic>).cast<String>().toList();
   }
 
   Map<String, dynamic> toMap() {
